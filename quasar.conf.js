@@ -1,32 +1,32 @@
 // Configuration for your app
 // https://quasar.dev/quasar-cli/quasar-conf-js
-const path = require('path'),
-  SymlinkWebpackPlugin = require('symlink-webpack-plugin'),
-  CopyWebpackPlugin = require('copy-webpack-plugin')
-module.exports = function (ctx) {
+const path = require("path"),
+  SymlinkWebpackPlugin = require("symlink-webpack-plugin"),
+  CopyWebpackPlugin = require("copy-webpack-plugin");
+module.exports = function(ctx) {
   return {
     boot: [
-      'axios',
-      'base-components',
-      'vuelidate',
-      'vee-validate',
-      'vue-signature-pad',
-      'custom-input'
+      "axios",
+      "base-components",
+      "vuelidate",
+      "vee-validate",
+      "vue-signature-pad",
+      "custom-input"
     ],
 
-    css: ['app.sass'],
+    css: ["app.sass"],
 
     // https://github.com/quasarframework/quasar/tree/dev/extras
     extras: [
       // 'ionicons-v4',
-      'mdi-v4',
+      "mdi-v4",
       // 'fontawesome-v5',
       // 'eva-icons',
       // 'themify',
       // 'roboto-font-latin-ext', // this or either 'roboto-font', NEVER both!
 
-      'roboto-font', // optional, you are not bound to it
-      'material-icons' // optional, you are not bound to it
+      "roboto-font", // optional, you are not bound to it
+      "material-icons" // optional, you are not bound to it
     ],
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-framework
@@ -41,25 +41,25 @@ module.exports = function (ctx) {
       //            (fastest compile time; minimum bundle size; most tedious)
       // * true   - Import everything from Quasar
       //            (not treeshaking Quasar; biggest bundle size; convenient)
-      all: 'auto',
+      all: "auto",
 
       components: [],
-      directives: ['Ripple'],
+      directives: ["Ripple"],
 
       // Quasar plugins
       plugins: [
-        'Notify',
-        'Dialog',
-        'LocalStorage',
-        'SessionStorage',
-        'LoadingBar'
+        "Notify",
+        "Dialog",
+        "LocalStorage",
+        "SessionStorage",
+        "LoadingBar"
       ],
       config: {
         // cordova: {
         //   backButtonExit: false
         // },
         loadingBar: {
-          color: 'accent'
+          color: "accent"
         }
       }
     },
@@ -69,9 +69,9 @@ module.exports = function (ctx) {
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-build
     build: {
-      distDir: 'public',
+      distDir: "public",
       scopeHoisting: true,
-      vueRouterMode: 'history',
+      vueRouterMode: "history",
       // showProgress: false,
       // gzip: true,
       // analyze: true,
@@ -79,38 +79,38 @@ module.exports = function (ctx) {
       // extractCSS: false,
 
       // https://quasar.dev/quasar-cli/cli-documentation/handling-webpack
-      extendWebpack (cfg) {
+      extendWebpack(cfg) {
         cfg.module.rules.push({
-          enforce: 'pre',
+          enforce: "pre",
           test: /\.(js|vue)$/,
-          loader: 'eslint-loader',
+          loader: "eslint-loader",
           exclude: /node_modules/,
           options: {
-            formatter: require('eslint').CLIEngine.getFormatter('stylish')
+            formatter: require("eslint").CLIEngine.getFormatter("stylish")
           }
-        })
+        });
 
         cfg.resolve.alias = {
           ...cfg.resolve.alias,
-          features: path.resolve(__dirname, './src/features')
-        }
+          features: path.resolve(__dirname, "./src/features")
+        };
 
         if (ctx.prod) {
           cfg.plugins.push(
             new CopyWebpackPlugin([
               {
-                from: path.resolve(__dirname, 'public_files'),
-                to: ''
+                from: path.resolve(__dirname, "public_files"),
+                to: ""
               }
             ])
-          )
+          );
 
           cfg.plugins.push(
             new SymlinkWebpackPlugin({
-              origin: '../storage/app/public',
-              symlink: 'storage'
+              origin: "../storage/app/public",
+              symlink: "storage"
             })
-          )
+          );
         }
       }
     },
@@ -122,8 +122,8 @@ module.exports = function (ctx) {
       open: true, // opens browser window automatically
       proxy: [
         {
-          context: ['/api', '/storage'],
-          target: 'http://localhost:8000' // laravel end-point
+          context: ["/api", "/storage"],
+          target: "http://localhost:8000" // laravel end-point
         }
       ],
       historyApiFallback: true
@@ -131,7 +131,7 @@ module.exports = function (ctx) {
 
     // animations: 'all', // --- includes all animations
     // https://quasar.dev/options/animations
-    animations: 'all',
+    animations: [],
 
     // https://quasar.dev/quasar-cli/developing-ssr/configuring-ssr
     ssr: {
@@ -146,35 +146,35 @@ module.exports = function (ctx) {
         // name: 'Quasar App',
         // short_name: 'Quasar App',
         // description: 'A Quasar Framework app',
-        display: 'standalone',
-        orientation: 'portrait',
-        background_color: '#ffffff',
-        theme_color: '#027be3',
+        display: "standalone",
+        orientation: "portrait",
+        background_color: "#ffffff",
+        theme_color: "#027be3",
         icons: [
           {
-            src: 'statics/icons/icon-128x128.png',
-            sizes: '128x128',
-            type: 'image/png'
+            src: "statics/icons/icon-128x128.png",
+            sizes: "128x128",
+            type: "image/png"
           },
           {
-            src: 'statics/icons/icon-192x192.png',
-            sizes: '192x192',
-            type: 'image/png'
+            src: "statics/icons/icon-192x192.png",
+            sizes: "192x192",
+            type: "image/png"
           },
           {
-            src: 'statics/icons/icon-256x256.png',
-            sizes: '256x256',
-            type: 'image/png'
+            src: "statics/icons/icon-256x256.png",
+            sizes: "256x256",
+            type: "image/png"
           },
           {
-            src: 'statics/icons/icon-384x384.png',
-            sizes: '384x384',
-            type: 'image/png'
+            src: "statics/icons/icon-384x384.png",
+            sizes: "384x384",
+            type: "image/png"
           },
           {
-            src: 'statics/icons/icon-512x512.png',
-            sizes: '512x512',
-            type: 'image/png'
+            src: "statics/icons/icon-512x512.png",
+            sizes: "512x512",
+            type: "image/png"
           }
         ]
       }
@@ -183,6 +183,8 @@ module.exports = function (ctx) {
     // https://quasar.dev/quasar-cli/developing-cordova-apps/configuring-cordova
     cordova: {
       // id: 'org.cordova.quasar.app',
+      id: "org.devinnorgarb.collabify"
+
       // noIosLegacyBuildFlag: true, // uncomment only if you know what you are doing
     },
 
@@ -190,7 +192,7 @@ module.exports = function (ctx) {
     electron: {
       // bundler: 'builder', // or 'packager'
 
-      extendWebpack (cfg) {
+      extendWebpack(cfg) {
         // do something with Electron main process Webpack cfg
         // chainWebpack also available besides this extendWebpack
       },
@@ -211,5 +213,5 @@ module.exports = function (ctx) {
         // appId: 'test-q'
       }
     }
-  }
-}
+  };
+};

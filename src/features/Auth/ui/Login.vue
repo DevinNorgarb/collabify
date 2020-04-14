@@ -230,9 +230,9 @@ export default {
     },
     async login () {
       this.$v.form.$touch()
-      if (this.$v.form.$error || this.loading === true) {
-        return
-      }
+      // if (this.$v.form.$error || this.loading === true) {
+      //   return
+      // }
 
       console.log('login', this.form)
       this.loading = true

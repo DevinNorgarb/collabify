@@ -2,6 +2,7 @@
  * Axios boot initiation and helper functions pertaining to axios instance
  * @author ren metalsadman
  */
+import hello from "hellojs";
 
 // import { Platform } from 'quasar'
 import { Notify } from 'quasar'
@@ -108,9 +109,24 @@ const defaultInterceptor = store => {
 
 const appMode = type =>
   ({
-    test: 'http://192.168.8.105:8001/',
-    laravel: 'http://192.168.8.105:8001/api',
-    production: 'http://192.168.8.105:8001/api'
+    test: 'http://192.168.8.105:8000/api',
+    laravel: 'http://192.168.8.105:8000/api',
+    production: 'http://192.168.8.105:8000/api',
+    redirect_uri_prod: 'http://192.168.8.105:8080/login',
+    redirect_uri_dev: 'http://192.168.8.105:8080/login'
+    // get mobile () {
+    //   return Platform.is.cordova ? this.local : this.test
+    // }
+  }[type])
+
+
+  export const appModeVuex = type =>
+  ({
+    test: 'http://192.168.8.105:8000/api',
+    laravel: 'http://192.168.8.105:8000/api',
+    production: 'http://192.168.8.105:8000/api',
+    redirect_uri_prod: 'http://192.168.8.105:8080/login',
+    redirect_uri_dev: 'http://192.168.8.105:8080/login'
     // get mobile () {
     //   return Platform.is.cordova ? this.local : this.test
     // }
@@ -163,6 +179,21 @@ export const unSetAuthHeader = () => {
 export const setBaseUrl = strUrl => {
   axios.defaults.baseURL = strUrl
 }
+
+
+export const oauthLogin = store => {
+  var SPOTIFY_CLIENT_ID = "4fcf1eee54994be6a3f87183e80d4943";
+    hello.init(
+      {
+        spotify: SPOTIFY_CLIENT_ID
+      },
+      {
+        redirect_uri: appMode(process.env.DEV ? 'laravel' : 'production'),
+        oauth_proxy: "https://auth-server.herokuapp.com/proxy"
+      }
+    );
+}
+
 
 /**
  * Custom interceptor if you want to have a global Notification

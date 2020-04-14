@@ -125,8 +125,8 @@ const appMode = type =>
     test: 'http://192.168.8.105:8000/api',
     laravel: 'http://192.168.8.105:8000/api',
     production: 'http://192.168.8.105:8000/api',
-    redirect_uri_prod: 'http://192.168.8.105:8080/login',
-    redirect_uri_dev: 'http://192.168.8.105:8080/login'
+    redirect_uri_prod: 'http://192.168.8.105:8080/#/',
+    redirect_uri_dev: 'http://192.168.8.105:8080/#/'
     // get mobile () {
     //   return Platform.is.cordova ? this.local : this.test
     // }

@@ -229,7 +229,7 @@ export default {
       this.$store.dispatch('resetAllState')
     },
     async login () {
-      this.$v.form.$touch()
+      // this.$v.form.$touch()
       // if (this.$v.form.$error || this.loading === true) {
       //   return
       // }

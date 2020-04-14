@@ -6,12 +6,12 @@ import hello from "hellojs";
 
 
 export const login = async ({ commit, dispatch, getters }, payload) => {
-  try {
-    log('login action', payload)
+  // try {
+  //   log('login action', payload)
 
     // const oauthRes = await oauthLogin
     // const oauthRes = await oauthLogin
-        const oauthRes = await oauthLogin('oauthLogin', payload)
+        const oauthRes = await dispatch('oauthLogin', "spotify")
 
 
         console.log(oauthRes);
@@ -29,10 +29,10 @@ export const login = async ({ commit, dispatch, getters }, payload) => {
     // commit('commons/updateField', { path: 'isAuth', value: true }, { root: true })
     // commit('updateField', { path: 'token', value: res.data.data.token })
     // setAuthHeader(getters['getField']('token'))
-  } catch (e) {
-    process.env.DEV && log(e)
-    throw e
-  }
+  // } catch (e) {
+    // process.env.DEV && log(e)
+  //   throw e
+  // }
 }
 
 export const register = async ({ commit, dispatch, getters }, payload) => {
@@ -53,14 +53,28 @@ export const oauthLogin = async ({ commit, dispatch, getters }, payload) => {
 
   var SPOTIFY_CLIENT_ID = "4fcf1eee54994be6a3f87183e80d4943";
 
-    hello.init(
+  console.log(SPOTIFY_CLIENT_ID);
+
+	hello.login('auth.login', (r) => {
+		// Get Profile
+		console.log("auth.login");
+		var hi = hello(payload)
+		hi.api('me').then( (p) => {
+      console.log(p);
+      
+			// document.getElementById(payload).innerHTML = "<img src='"+ p.thumbnail + "' width=24/>Connected to "+ r.network+" as " + p.name;
+		});
+	});
+      // console.log(hello("spotify"));
+
+    hello("spotify").init(
       {
         spotify: SPOTIFY_CLIENT_ID
       },
       {
-        redirect_uri: appModeVuex(process.env.DEV ? 'redirect_uri' : 'redirect_uri_prod'),
+        redirect_uri: appModeVuex(process.env.DEVa ? 'redirect_uri' : 'redirect_uri_prod'),
+        scope:  "user-read-private,user-read-email,playlist-read-collaborative,playlist-modify-private,playlist-modify-public,playlist-read-private,user-modify-playback-state,user-read-playback-state,user-read-currently-playing,user-library-modify,user-library-read,user-follow-modify,user-follow-read,user-read-recently-played,user-top-read,streaming,app-remote-control",
         oauth_proxy: "https://auth-server.herokuapp.com/proxy"
-
       }
       );
 
@@ -68,31 +82,32 @@ export const oauthLogin = async ({ commit, dispatch, getters }, payload) => {
 
 
 
-    hello('spotify').login({scope:  "user-read-private,user-read-email,playlist-read-collaborative,playlist-modify-private,playlist-modify-public,playlist-read-private,user-modify-playback-state,user-read-playback-state,user-read-currently-playing,user-library-modify,user-library-read,user-follow-modify,user-follow-read,user-read-recently-played,user-top-read,streaming,app-remote-control"}).then(function() {
-      alert('You are signed in to Facebook');
-    }, function(e) {
-      alert('Signin error: ' + e.error.message);
-    });
+
+    //   hi.login().then(function() {
+    //   alert('You are signed in to Facebook');
+    // }, function(e) {
+    //   alert('Signin error: ' + e.error.message);
+    // });
 
 
 
-    hello("spotify").login().then(() => {
-      const authRes = hello("spotify").getAuthResponse();
-     console.log(authRes);
+    // hello.login().then(() => {
+    //   const authRes = hello.getAuthResponse();
+    //  console.log(authRes);
 
-      /*
+    //   /*
 
-        performs operations using the token from authRes
-      */
-      hello('spotify').api('me').then(function (json) {
-        const profile = json;
-        console.log(profile);
+    //     performs operations using the token from authRes
+    //   */
+    //  hello.api('me').then(function (json) {
+    //     const profile = json;
+    //     console.log(profile);
 
-        /*
-          performs operations using the user info from profile
-        */
-      });
-    })
+    //     /*
+    //       performs operations using the user info from profile
+    //     */
+    //   });
+    // })
 
   // try {
   //   log('login action', payload)

@@ -4,10 +4,11 @@ const load = view => () => import(`features/Auth/ui/${view}.vue`)
 //   path: '',
 //   name: 'register',
 //   meta: {
-//     title: 'Register'
-//   },
-//   component: load('Register')
-// }
+  //     title: 'Register'
+  //   },
+  //   component: load('Register')
+  // }
+  //   name: 'register',
 
 export default {
   path: '/',

@@ -4,11 +4,11 @@
  */
 import hello from "hellojs";
 
-// import { Platform } from 'quasar'
-import { Notify } from 'quasar'
-import axios from 'axios'
+import { Platform } from "quasar";
+import { Notify } from "quasar";
+import axios from "axios";
 
-let notif = () => void 0
+let notif = () => void 0;
 
 /**
  * Used for intercepting axios requests and responses
@@ -21,40 +21,40 @@ const defaultInterceptor = store => {
     config => {
       // Do something before request is sent
       console.log(
-        '%c[REQUEST] sent -> ' + config.url,
-        'color: blue; font-weight: bold;',
+        "%c[REQUEST] sent -> " + config.url,
+        "color: blue; font-weight: bold;",
         config
-      )
-      return config
+      );
+      return config;
     },
     error => {
       // Do something with request error
       console.log(
-        '%c[REQUEST] error -> ' + error.config.url,
-        'color: red; font-weight: bold;',
+        "%c[REQUEST] error -> " + error.config.url,
+        "color: red; font-weight: bold;",
         error.message || error
-      )
-      return Promise.reject(error)
+      );
+      return Promise.reject(error);
     }
-  )
+  );
   // Add a response interceptor
   axios.interceptors.response.use(
     response => {
       // Do something with response data
       console.log(
-        '%c[RESPONSE] received -> ' + response.config.url,
-        'color: green; font-weight: bold;',
+        "%c[RESPONSE] received -> " + response.config.url,
+        "color: green; font-weight: bold;",
         response
-      )
-      store.dispatch('commons/testRouter')
-      notif()
+      );
+      store.dispatch("commons/testRouter");
+      notif();
       notif = Notify.create({
-        color: 'positive',
-        icon: 'mdi-check',
+        color: "positive",
+        icon: "mdi-check",
         message: response.data.message,
         timeout: 1500
-      })
-      return response
+      });
+      return response;
     },
     error => {
       // Do something with response error
@@ -64,41 +64,41 @@ const defaultInterceptor = store => {
        * else it's a generic error object
        */
       console.log(
-        '%c[RESPONSE] error ->' + error.config.url,
-        'color: red; font-weight: bold;',
+        "%c[RESPONSE] error ->" + error.config.url,
+        "color: red; font-weight: bold;",
         error.response || error.message
-      )
-      let message = ''
+      );
+      let message = "";
       if (error.response !== undefined) {
-        if (typeof error.response.data.message === 'object') {
-          console.log('message', error.response.data.message)
+        if (typeof error.response.data.message === "object") {
+          console.log("message", error.response.data.message);
           // message = error.response.message
-          let messages = error.response.data.message
+          let messages = error.response.data.message;
           for (let k in messages) {
-            console.log(messages[k])
+            console.log(messages[k]);
             if (Array.isArray(messages[k])) {
-              message = messages[k].join(' ')
+              message = messages[k].join(" ");
             }
           }
         } else {
-          message = error.response.data.message
+          message = error.response.data.message;
         }
       } else {
-        message = error.message
+        message = error.message;
       }
 
-      notif()
+      notif();
       notif = Notify.create({
-        color: 'negative',
-        icon: 'mdi-alert-circle-outline',
+        color: "negative",
+        icon: "mdi-alert-circle-outline",
         message: message,
         timeout: 2000
-      })
+      });
       // return the error object
-      return Promise.reject(error)
+      return Promise.reject(error);
     }
-  )
-}
+  );
+};
 
 /**
  * Convenience function for getting the baseUrl
@@ -109,91 +109,88 @@ const defaultInterceptor = store => {
 
 const appMode = type =>
   ({
-    test: 'http://192.168.8.105:8000/api',
-    laravel: 'http://192.168.8.105:8000/api',
-    production: 'http://192.168.8.105:8000/api',
-    redirect_uri_prod: 'http://192.168.8.105:8080/login',
-    redirect_uri_dev: 'http://192.168.8.105:8080/login'
+    test: "http://192.168.8.105:8000/api",
+    laravel: "http://192.168.8.105:8000/api",
+    production: "http://192.168.8.105:8000/api",
+    redirect_uri_prod: "http://192.168.8.105:8080/login",
+    redirect_uri_dev: "http://192.168.8.105:8080/login"
     // get mobile () {
     //   return Platform.is.cordova ? this.local : this.test
     // }
-  }[type])
+  }[type]);
 
-
-  export const appModeVuex = type =>
+export const appModeVuex = type =>
   ({
-    test: 'http://192.168.8.105:8000/api',
-    laravel: 'http://192.168.8.105:8000/api',
-    production: 'http://192.168.8.105:8000/api',
-    redirect_uri_prod: 'http://192.168.8.105:8080/#/',
-    redirect_uri_dev: 'http://192.168.8.105:8080/#/'
+    test: "http://192.168.8.105:8000/api",
+    laravel: "http://192.168.8.105:8000/api",
+    production: "http://192.168.8.105:8000/api",
+    redirect_uri_prod: "http://192.168.8.105:8080/#/",
+    redirect_uri_dev: "http://192.168.8.105:8080/#/"
     // get mobile () {
     //   return Platform.is.cordova ? this.local : this.test
     // }
-  }[type])
+  }[type]);
 
 export default ({ Vue, store }) => {
   // const url = store.state['commons'].targetUrl || appMode('vhost')
   // set axios defaults
-  axios.defaults.baseURL = appMode(process.env.DEV ? 'laravel' : 'production')
-  axios.defaults.headers.post['Content-Type'] = 'application/json'
-  axios.defaults.timeout = 2000
+  axios.defaults.baseURL = appMode(process.env.DEV ? "laravel" : "production");
+  axios.defaults.headers.post["Content-Type"] = "application/json";
+  axios.defaults.timeout = 20000;
   // add axios generic interceptor
-  defaultInterceptor(store)
+  defaultInterceptor(store);
   // process.env.DEV && defaultInterceptor()
   // customInterceptor(store)
-  const token = store.getters['auth/getField']('token')
+  const token = store.getters["auth/getField"]("token");
   if (token) {
-    setAuthHeader(token)
+    setAuthHeader(token);
   }
 
   // set custom header for the client or device information
-  // const deviceInfo = store.getters['commons/getField']('deviceInfo')
-  // const quasarInfo = Platform.is
-  // const clientInfo = deviceInfo
-  //   ? { client: quasarInfo, device: deviceInfo }
-  //   : { client: quasarInfo }
-  // if (clientInfo) {
-  //   setClientInfoHeader(clientInfo)
-  // }
+  const deviceInfo = store.getters["commons/getField"]("deviceInfo");
+  const quasarInfo = Platform.is;
+  const clientInfo = deviceInfo
+    ? { client: quasarInfo, device: deviceInfo }
+    : { client: quasarInfo };
+  if (clientInfo) {
+    setClientInfoHeader(clientInfo);
+  }
 
-  Vue.prototype.$axios = axios
-}
+  Vue.prototype.$axios = axios;
+};
 
 export const setAuthHeader = token => {
-  axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
-}
+  axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+};
 
 export const setClientInfoHeader = clientInfo => {
-  axios.defaults.headers.common['ClientInfo'] = JSON.stringify(clientInfo)
-}
+  axios.defaults.headers.common["ClientInfo"] = JSON.stringify(clientInfo);
+};
 
 /**
  * unset the header part of your axios instance
  * in logging out or token expiry etc..
  */
 export const unSetAuthHeader = () => {
-  axios.defaults.headers.common['Authorization'] = null
-}
+  axios.defaults.headers.common["Authorization"] = null;
+};
 
 export const setBaseUrl = strUrl => {
-  axios.defaults.baseURL = strUrl
-}
-
+  axios.defaults.baseURL = strUrl;
+};
 
 export const oauthLogin = store => {
   var SPOTIFY_CLIENT_ID = "4fcf1eee54994be6a3f87183e80d4943";
-    hello.init(
-      {
-        spotify: SPOTIFY_CLIENT_ID
-      },
-      {
-        redirect_uri: appMode(process.env.DEV ? 'laravel' : 'production'),
-        oauth_proxy: "https://auth-server.herokuapp.com/proxy"
-      }
-    );
-}
-
+  hello.init(
+    {
+      spotify: SPOTIFY_CLIENT_ID
+    },
+    {
+      redirect_uri: appMode(process.env.DEV ? "laravel" : "production"),
+      oauth_proxy: "https://auth-server.herokuapp.com/proxy"
+    }
+  );
+};
 
 /**
  * Custom interceptor if you want to have a global Notification
@@ -206,56 +203,56 @@ const customInterceptor = store => {
   axios.interceptors.request.use(
     config => {
       console.log(
-        '%c[REQUEST] sent -> ' + config.url,
-        'color: blue; font-weight: bold;',
+        "%c[REQUEST] sent -> " + config.url,
+        "color: blue; font-weight: bold;",
         config
-      )
-      return config
+      );
+      return config;
     },
     error => {
       console.log(
-        '%c[REQUEST] error -> ' + error.config.url,
-        'color: red; font-weight: bold;',
+        "%c[REQUEST] error -> " + error.config.url,
+        "color: red; font-weight: bold;",
         error.message || error
-      )
-      return Promise.reject(error)
+      );
+      return Promise.reject(error);
     }
-  )
+  );
   // Add a response interceptor
   axios.interceptors.response.use(
     response => {
       console.log(
-        '%c[RESPONSE] received -> ' + response.config.url,
-        'color: green; font-weight: bold;',
+        "%c[RESPONSE] received -> " + response.config.url,
+        "color: green; font-weight: bold;",
         response
-      )
-      if (store.getters['commons/getHandleAsyncValidation']) {
-        store.dispatch('commons/setServerErrorResponse', null)
+      );
+      if (store.getters["commons/getHandleAsyncValidation"]) {
+        store.dispatch("commons/setServerErrorResponse", null);
       }
-      return response
+      return response;
     },
     error => {
       console.log(
-        '%c[RESPONSE] error ->' + error.config.url,
-        'color: red; font-weight: bold;',
+        "%c[RESPONSE] error ->" + error.config.url,
+        "color: red; font-weight: bold;",
         error.response || error.message
-      )
+      );
       // if (error.response) {
       // if has response save to store
       // console.log('server error response =>', error.response.data)
-      if (store.getters['commons/getHandleAsyncValidation'] && error.response) {
+      if (store.getters["commons/getHandleAsyncValidation"] && error.response) {
         store.dispatch(
-          'commons/setServerErrorResponse',
+          "commons/setServerErrorResponse",
           error.response.data.message
-        )
+        );
       }
       // }
-      return Promise.reject(error)
+      return Promise.reject(error);
     }
-  )
-}
+  );
+};
 
 // usage in *.js file to keep same instance of axios
 // throughout your app
 // import { axios } from 'boot/axios'
-export { axios }
+export { axios };

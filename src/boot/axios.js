@@ -108,9 +108,9 @@ const defaultInterceptor = store => {
 
 const appMode = type =>
   ({
-    test: 'https://b9g95.sse.codesandbox.io/',
-    laravel: 'http://localhost:8000/api',
-    production: 'http://127.0.0.1:8000/api'
+    test: 'http://192.168.8.105:8001/',
+    laravel: 'http://192.168.8.105:8001/api',
+    production: 'http://192.168.8.105:8001/api'
     // get mobile () {
     //   return Platform.is.cordova ? this.local : this.test
     // }

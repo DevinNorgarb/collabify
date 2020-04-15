@@ -33,7 +33,6 @@ module.exports = function(ctx) {
     framework: {
       // iconSet: 'ionicons-v4', // Quasar icon set
       // lang: 'de', // Quasar language pack
-
       // Possible values for "all":
       // * 'auto' - Auto-import needed Quasar components & directives
       //            (slightly higher compile time; next to minimum bundle size; most convenient)
@@ -58,6 +57,7 @@ module.exports = function(ctx) {
         // cordova: {
         //   backButtonExit: false
         // },
+        dark: "auto",
         loadingBar: {
           color: "accent"
         }

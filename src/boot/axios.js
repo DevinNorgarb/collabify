@@ -184,7 +184,6 @@ export const oauthLogin = store => {
 
   hello.on("auth.login", function(r) {
     // Get Profile
-    console.log("auth.login");
     var hi = hello(r.network);
     hi.api("me").then(function(p) {
       document.getElementById(r.network).innerHTML =

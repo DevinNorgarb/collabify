@@ -15,7 +15,7 @@
           >
             <div class="row justify-center q-pb-xs">
               <q-img
-                src="statics/icons/icon-256x256.png"
+                src="statics/icons/app-icon-1.png"
                 contain
                 style="width: 150px;"
                 no-default-spinner
@@ -163,7 +163,7 @@
           >
             <div class="row justify-center q-pb-xs">
               <q-img
-                src="statics/icons/icon-256x256.png"
+                src="statics/icons/app-icon-1.png"
                 contain
                 style="width: 100px;"
                 no-default-spinner
@@ -239,7 +239,7 @@ export default {
       await this.$store.dispatch('auth/login', this.form)
         .then(res => {
           // this.localNotif()
-          // this.localNotif = this.$q.notify({
+          // this.locaxlNotif = this.$q.notify({
           //   color: 'positive',
           //   icon: 'mdi-check',
           //   message: res,
@@ -305,7 +305,7 @@ export default {
 
 <style scoped>
 .main {
-  background-color: #268fec;
+  background-color: #1d1d1d;
   background-repeat: no-repeat;
   background-size: cover;
 }

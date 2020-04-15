@@ -181,12 +181,28 @@ export const setBaseUrl = strUrl => {
 
 export const oauthLogin = store => {
   var SPOTIFY_CLIENT_ID = "4fcf1eee54994be6a3f87183e80d4943";
+
+  hello.on("auth.login", function(r) {
+    // Get Profile
+    console.log("auth.login");
+    var hi = hello(r.network);
+    hi.api("me").then(function(p) {
+      document.getElementById(r.network).innerHTML =
+        "<img src='" +
+        p.thumbnail +
+        "' width=24/>Connected to " +
+        r.network +
+        " as " +
+        p.name;
+    });
+  });
+
   hello.init(
     {
       spotify: SPOTIFY_CLIENT_ID
     },
     {
-      redirect_uri: appMode(process.env.DEV ? "laravel" : "production"),
+      redirect_uri: appModeVuex(process.env.DEV ? "laravel" : "production"),
       oauth_proxy: "https://auth-server.herokuapp.com/proxy"
     }
   );

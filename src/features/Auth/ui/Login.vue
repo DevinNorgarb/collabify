@@ -13,7 +13,8 @@
             style="width:500px; max-width: 90vw;"
             v-if="showLoginForm"
           >
-            <div class="row justify-center q-pb-xs">
+
+           <div class="row justify-center q-pb-xs">
               <q-img
                 src="statics/icons/app-icon-1.png"
                 contain
@@ -213,6 +214,21 @@ export default {
     }
   },
   methods: {
+    auth(network) {
+      const hello = this.hello;
+      hello(network).login().then(() => {
+        const authRes = hello(network).getAuthResponse();
+        /*
+          performs operations using the token from authRes
+        */
+        hello(network).api('me').then(function (json) {
+          const profile = json;
+          /*
+            performs operations using the user info from profile
+          */
+        });
+      })
+    },
     showRegistrationDialog () {
       this.$refs.registerDialog.show()
     },
@@ -238,13 +254,13 @@ export default {
       this.loading = true
       await this.$store.dispatch('auth/login', this.form)
         .then(res => {
-          // this.localNotif()
-          // this.locaxlNotif = this.$q.notify({
-          //   color: 'positive',
-          //   icon: 'mdi-check',
-          //   message: res,
-          //   timeout: 1500
-          // })
+          this.localNotif()
+          this.locaxlNotif = this.$q.notify({
+            color: 'positive',
+            icon: 'mdi-check',
+            message: res,
+            timeout: 1500
+          })
           this.$router.replace('/home')
         }).catch(err => {
           console.log(err)

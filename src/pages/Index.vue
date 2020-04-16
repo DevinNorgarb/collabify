@@ -2,26 +2,11 @@
   <q-page class="flex flex-center">
     <div class="column justify-center items-center">
       <div>
-        <h5>Quasar Laravel Integration</h5>
+        <h5>Please Sign in to Spotify</h5>
       </div>
       <div>
-        <img
-          alt="Quasar logo"
-          src="~assets/quasar-logo-full.svg"
-        >
-      </div>
-      <div>
-        <p>
-          Make an api request to Laravel <i>/api/test</i><br />
-          <sub>Before you need to run <i>artisan serve</i></sub>
-        </p>
-        <q-btn
-          :loading="loading"
-          :color="color"
-          @click="makeRequest"
-        >
-          make an api request
-        </q-btn>
+
+        <spotify-auth/>
       </div>
       <div>
         <code>
@@ -35,8 +20,12 @@
 <style></style>
 
 <script>
+import SpotifyAuth from "../features/Auth/ui/SpotifyAuth.vue";
 export default {
   name: 'PageIndex',
+  components: {
+    "spotify-auth": SpotifyAuth
+  },
   data () {
     return {
       color: 'primary',
@@ -73,6 +62,23 @@ export default {
     //     this.loading = false
     //   }, 700)
     // }
+
+    auth (network) {
+      const hello = this.hello;
+      hello(network).login().then(() => {
+        const authRes = hello(network).getAuthResponse();
+        /*
+          performs operations using the token from authRes
+        */
+        hello(network).api('me').then(function (json) {
+          const profile = json;
+          /*
+            performs operations using the user info from profile
+          */
+        });
+      })
+    },
+
     makeRequest () {
       //   let response
       //   let color = 'negative'

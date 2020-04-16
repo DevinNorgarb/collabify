@@ -16,8 +16,8 @@ export default ({ Vue }) => {
       spotify: SPOTIFY_CLIENT_ID
     },
     {
-      redirect_uri: appModeVuex(process.env.DEV ? "laravel" : "production")
-      //   oauth_proxy: "https://auth-server.herokuapp.com/proxy"
+      redirect_uri: "http://192.168.8.105:8080/#/"
+      //   oauth_proxy: "https://auth-server.hserokuapp.com/proxy"
     }
   );
   // Set i18n instance on app

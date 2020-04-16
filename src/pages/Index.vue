@@ -5,7 +5,6 @@
         <h5>Please Sign in to Spotify</h5>
       </div>
       <div>
-
         <spotify-auth/>
       </div>
       <div>

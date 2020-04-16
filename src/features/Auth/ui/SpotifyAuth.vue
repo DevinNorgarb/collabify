@@ -1,118 +1,18 @@
 <template>
-    <!-- <q-card> -->
-      <q-card-section>
-        <div class="text-h6">
-              <q-btn
-              @click="auth('spotify')"
-          color="green"
-          push
-          class="full-width"
-          icon="fab fa-spotify"
-          label="Play Playlist"
-          size="md"
-        >
-        </q-btn>
-        </div>
-      </q-card-section>
-
-      <!-- <q-card-section>
-        <q-form
-          :class="loading ? 'disabled no-pointer-events': ''"
-          ref="mainForm"
-        >
-          <div class="row justify-center bg-white q-pa-md q-gutter-sm">
-            <div class="col-12">
-              <base-text-field
-                :val="$v.form.email"
-                outlined
-                v-model="form.email"
-                label="Email Address"
-                @input="$v.form.email.$touch"
-                @blur="$v.form.email.$touch"
-                clearable
-              >
-                <template v-slot:prepend>
-                  <q-icon
-                    name="mdi-account"
-                    @click.stop.prevent
-                    @focus.stop
-                  />
-                </template>
-              </base-text-field>
-            </div>
-            <div class="col-12">
-              <base-text-field
-                :val="$v.form.password"
-                @input="$v.form.password.$touch"
-                @blur="$v.form.password.$touch"
-                outlined
-                v-model="form.password"
-                label="Password"
-                type="password"
-                @keyup.enter="ok"
-                hide-show-password
-              >
-                <template v-slot:prepend>
-                  <q-icon name="mdi-lock-outline" />
-                </template>
-              </base-text-field>
-            </div>
-            <div class="col-12">
-              <base-text-field
-                :val="$v.form.confirm_password"
-                @input="$v.form.confirm_password.$touch"
-                @blur="$v.form.confirm_password.$touch"
-                outlined
-                v-model="form.confirm_password"
-                label="Confirm Password"
-                type="password"
-                @keyup.enter="ok"
-                hide-show-password
-              >
-                <template v-slot:prepend>
-                  <q-icon name="mdi-lock-outline" />
-                </template>
-              </base-text-field>
-            </div>
-            <div class="col-12">
-              <base-text-field
-                :val="$v.form.name"
-                outlined
-                v-model="form.name"
-                label="Name"
-                @input="$v.form.name.$touch"
-                @blur="$v.form.name.$touch"
-                clearable
-              >
-                <template v-slot:prepend>
-                  <q-icon
-                    name="mdi-account"
-                    @click.stop.prevent
-                    @focus.stop
-                  />
-                </template>
-              </base-text-field>
-            </div>
-          </div>
-        </q-form>
-      </q-card-section> -->
-      <!-- <q-separator />
-      <q-card-actions align="right">
-        <q-btn
-          flat
-          label="Cancel"
-          color="primary"
-          v-close-popup
-          :disable="loading"
-        />
-        <q-btn
-          label="Ok"
-          color="primary"
-          @click="ok"
-          :loading="loading"
-        /> -->
-      <!-- </q-card-actions>
-    </q-card> -->
+  <!-- <q-card> -->
+  <q-card-section>
+    <div class="text-h6">
+      <q-btn
+        @click="auth('spotify')"
+        color="green"
+        class="full-width"
+        icon="fab fa-spotify"
+        label="Login Using Spotify"
+        size=""
+      >
+      </q-btn>
+    </div>
+  </q-card-section>
 </template>
 
 <script>
@@ -123,7 +23,8 @@ const fields = () => ({
   email: null,
   password: null,
   confirm_password: null,
-  name: null
+  name: null,
+  user: {}
 })
 export default {
   name: "SpotifyAuth",
@@ -147,7 +48,124 @@ export default {
     shown () {
       this.$refs.mainForm.resetValidation()
     },
-        auth(network) {
+     setNameText() {
+         var nameText = this.user;
+         localStorage.setItem('name', nameText);
+         alert('Value set');
+     },
+
+      openInAppBrowser() {
+    var name;
+    var nameInterval;
+    var win = window.open( "test.html", "_blank", "location=yes" );
+
+    win.addEventListener( "loadstop", function() {
+        win.executeScript({ code: "localStorage.setItem('name', '')" });
+        nameInterval = setInterval(function() {
+            win.executeScript({ code: "localStorage.getItem('name')" }, function(values) {
+                name = values[0];
+            });
+        }, 100)
+    });
+
+    win.addEventListener('exit', function() {
+        clearInterval(nameInterval);
+        document.getElementById('output').innerText = name;
+    });
+},
+    useInAppBrowser () {
+
+
+  // var authorizeURL = `${this.config.apiUrl}/auth/redirect-to-provider`;
+      var authorizeURL = `http://192.168.8.105:8888/auth/spotify`;
+      // var endUrl = "https://commandify.devswebdev.com";
+      var endUrl = "http://192.168.8.105:8080";
+      // this.getUser.redirectUri;
+
+      var browser = cordova.InAppBrowser.open(
+        authorizeURL,
+        "_blank",
+        "location=no",
+        // "location=no",
+        "hidden=yes"
+      );
+
+      window.plugins.spinnerDialog.show(null, "Loading", true);
+
+      browser.addEventListener("loadstop", evt => {
+        window.plugins.spinnerDialog.hide();
+      });
+      browser.addEventListener("loaderror", evt => {
+        window.plugins.spinnerDialog.hide();
+        browser.close();
+      });
+
+      browser.addEventListener("loadstart", evt => {
+        var url_string = evt.url;
+        var url = new URL(url_string);
+
+        var params = this.parse_query_string(url.search);
+        console.log(params);
+
+        // this.code = params["?token"];
+        // this.auth_code = params["?code"];
+
+        // if (params.user) {
+        //   var user = JSON.parse(params["?user"]);
+
+        //   // this.setDatabaseUser(user);
+        // }
+
+        // if (this.code) {
+        //   this.setAccessToken(this.code);
+        //   this.exchangeCodeForToken();
+        // }
+
+        if (evt.url.includes(endUrl)) {
+          browser.close();
+          window.plugins.spinnerDialog.hide();
+        }
+      });
+    },
+
+    parse_query_string (query) {
+      var vars = query.split("&");
+      var query_string = {};
+      for (var i = 0; i < vars.length; i++) {
+        var pair = vars[i].split("=");
+        var key = decodeURIComponent(pair[0]);
+        var value = decodeURIComponent(pair[1]);
+        // If first entry with this name
+        if (typeof query_string[key] === "undefined") {
+          query_string[key] = decodeURIComponent(value);
+          // If second entry with this name
+        } else if (typeof query_string[key] === "string") {
+          var arr = [query_string[key], decodeURIComponent(value)];
+          query_string[key] = arr;
+          // If third or later entry with this name
+        } else {
+          query_string[key].push(decodeURIComponent(value));
+        }
+      }
+      return query_string;
+    },
+
+    auth (network) {
+
+      // if (thi) {
+
+      // }
+      this.useInAppBrowser()
+
+      return
+
+
+
+
+
+
+
+
       const hello = this.hello;
       hello(network).login().then(() => {
         const authRes = hello(network).getAuthResponse();

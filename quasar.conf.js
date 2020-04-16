@@ -11,7 +11,7 @@ module.exports = function(ctx) {
       "vuelidate",
       "vee-validate",
       "vue-signature-pad",
-      "hello",
+      // "hello",
       "custom-input"
     ],
 
@@ -21,7 +21,7 @@ module.exports = function(ctx) {
     extras: [
       // 'ionicons-v4',
       "mdi-v4",
-      // 'fontawesome-v5',
+      'fontawesome-v5',
       // 'eva-icons',
       // 'themify',
       // 'roboto-font-latin-ext', // this or either 'roboto-font', NEVER both!

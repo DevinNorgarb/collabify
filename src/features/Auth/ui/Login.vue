@@ -26,7 +26,7 @@
               {{subAgent || ''}}
             </div>
             <form>
-              <base-text-field
+              <!-- <base-text-field
                 :val="$v.form.email"
                 filled
                 v-model="form.email"
@@ -40,9 +40,9 @@
                 <template v-slot:prepend>
                   <q-icon name="mdi-account" />
                 </template>
-              </base-text-field>
+              </base-text-field> -->
               <br>
-              <base-text-field
+              <!-- <base-text-field
                 :val="$v.form.password"
                 filled
                 v-model="form.password"
@@ -58,9 +58,9 @@
                 <template v-slot:prepend>
                   <q-icon name="mdi-lock" />
                 </template>
-              </base-text-field>
+              </base-text-field> -->
               <br>
-              <div>
+              <!-- <div>
                 <q-btn
                   class="full-width"
                   :loading="loading"
@@ -70,10 +70,14 @@
                   size="18px"
                 />
 
-              </div>
-              <!-- <div class="row justify-end q-pt-md"> -->
+              </div> -->
+
+
+
+
               <div class="row justify-center q-pt-md">
-                <q-btn
+                <spotify-auth></spotify-auth>
+                <!-- <q-btn
                   flat
                   dense
                   @click="showRegistrationDialog"
@@ -101,10 +105,10 @@
                   icon="mdi-settings"
                   @click="showRegistrationDialog"
                   color="blue-grey-1"
-                >
-                  <q-tooltip>
+                > -->
+                  <!-- <q-tooltip>
                     Settings
-                  </q-tooltip>
+                  </q-tooltip> -->
                 </q-btn>
               </div>
               <q-dialog
@@ -180,7 +184,9 @@
   </q-layout>
 </template>
 
+
 <script>
+import SpotifyAuth from "features/Auth/ui/SpotifyAuth";
 import Register from 'features/Auth/ui/RegisterDialog'
 import { required } from 'vuelidate/lib/validators'
 import { mapFields } from 'assets/utils/vuex-utils'
@@ -188,7 +194,8 @@ import { mapFields } from 'assets/utils/vuex-utils'
 
 export default {
   components: {
-    Register
+    Register,
+    SpotifyAuth
   },
   data () {
     return {

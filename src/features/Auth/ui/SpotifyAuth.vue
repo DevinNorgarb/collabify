@@ -83,8 +83,6 @@ export default {
         var url_string = evt.url;
         var url = new URL(url_string);
         var params = this.parse_query_string(url.search);
-        console.log(params);
-
 
         this.user = params;
 
@@ -118,34 +116,7 @@ export default {
     },
 
     auth (network) {
-
-      // if (thi) {
-
-      // }
       this.useInAppBrowser()
-
-      return
-
-
-
-
-
-
-
-
-      const hello = this.hello;
-      hello(network).login().then(() => {
-        const authRes = hello(network).getAuthResponse();
-        /*
-          performs operations using the token from authRes
-        */
-        hello(network).api('me').then(function (json) {
-          const profile = json;
-          /*
-            performs operations using the user info from profile
-          */
-        });
-      })
     },
     show () {
       // this.form.url = null
@@ -161,11 +132,9 @@ export default {
       if (this.$v.form.$error) {
         return
       }
-
-      // this.$refs.settings.hide()
       console.log('IP SETTINS', this.form)
       // console.log('RESP IP SETTINS', ))
-      // this.$store.dispatch('commons/updateSettings', params)
+      this.$store.dispatch('commons/updateSettings', params)
       this.loading = true
       this.$store.dispatch('auth/register', this.form)
         .then(res => {

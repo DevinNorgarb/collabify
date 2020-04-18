@@ -221,21 +221,6 @@ export default {
     }
   },
   methods: {
-    auth(network) {
-      const hello = this.hello;
-      hello(network).login().then(() => {
-        const authRes = hello(network).getAuthResponse();
-        /*
-          performs operations using the token from authRes
-        */
-        hello(network).api('me').then(function (json) {
-          const profile = json;
-          /*
-            performs operations using the user info from profile
-          */
-        });
-      })
-    },
     showRegistrationDialog () {
       this.$refs.registerDialog.show()
     },
@@ -252,17 +237,13 @@ export default {
       this.$store.dispatch('resetAllState')
     },
     async login () {
-      // this.$v.form.$touch()
-      // if (this.$v.form.$error || this.loading === true) {
-      //   return
-      // }
 
       console.log('login', this.form)
       this.loading = true
       await this.$store.dispatch('auth/login', this.form)
         .then(res => {
           this.localNotif()
-          this.locaxlNotif = this.$q.notify({
+          this.localNotif = this.$q.notify({
             color: 'positive',
             icon: 'mdi-check',
             message: res,

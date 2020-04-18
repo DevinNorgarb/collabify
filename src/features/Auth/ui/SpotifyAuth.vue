@@ -48,35 +48,14 @@ export default {
     shown () {
       this.$refs.mainForm.resetValidation()
     },
-     setNameText() {
-         var nameText = this.user;
-         localStorage.setItem('name', nameText);
-         alert('Value set');
-     },
-
-      openInAppBrowser() {
-    var name;
-    var nameInterval;
-    var win = window.open( "test.html", "_blank", "location=yes" );
-
-    win.addEventListener( "loadstop", function() {
-        win.executeScript({ code: "localStorage.setItem('name', '')" });
-        nameInterval = setInterval(function() {
-            win.executeScript({ code: "localStorage.getItem('name')" }, function(values) {
-                name = values[0];
-            });
-        }, 100)
-    });
-
-    win.addEventListener('exit', function() {
-        clearInterval(nameInterval);
-        document.getElementById('output').innerText = name;
-    });
-},
+    setNameText () {
+      var nameText = this.user;
+      localStorage.setItem('name', nameText);
+      alert('Value set');
+    },
     useInAppBrowser () {
 
 
-  // var authorizeURL = `${this.config.apiUrl}/auth/redirect-to-provider`;
       var authorizeURL = `http://192.168.8.105:8888/auth/spotify`;
       // var endUrl = "https://commandify.devswebdev.com";
       var endUrl = "http://192.168.8.105:8080";
@@ -103,23 +82,11 @@ export default {
       browser.addEventListener("loadstart", evt => {
         var url_string = evt.url;
         var url = new URL(url_string);
-
         var params = this.parse_query_string(url.search);
         console.log(params);
 
-        // this.code = params["?token"];
-        // this.auth_code = params["?code"];
 
-        // if (params.user) {
-        //   var user = JSON.parse(params["?user"]);
-
-        //   // this.setDatabaseUser(user);
-        // }
-
-        // if (this.code) {
-        //   this.setAccessToken(this.code);
-        //   this.exchangeCodeForToken();
-        // }
+        this.user = params;
 
         if (evt.url.includes(endUrl)) {
           browser.close();

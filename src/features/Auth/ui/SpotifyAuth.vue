@@ -85,6 +85,7 @@ export default {
         var params = this.parse_query_string(url.search);
 
         this.user = params;
+        console.log(this.user);
 
         if (evt.url.includes(endUrl)) {
           browser.close();

@@ -109,23 +109,22 @@ const defaultInterceptor = store => {
 
 const appMode = type =>
   ({
-    test: "http://192.168.8.105:8000/api",
-    laravel: "http://192.168.8.105:8000/api",
-    production: "http://192.168.8.105:8000/api",
-    redirect_uri_prod: "http://192.168.8.105:8080/login",
-    redirect_uri_dev: "http://192.168.8.105:8080/login"
-    // get mobile () {
+    test: "http://192.168.8.105:8888/callback",
+    laravel: "http://192.168.8.105:8888/callback",
+    production: "http://192.168.8.105:8888/callback",
+    redirect_uri_prod: "http://192.168.8.105:8888/callback",
+    redirect_uri_dev: "http://192.168.8.105:8888/callback"    // get mobile () {
     //   return Platform.is.cordova ? this.local : this.test
     // }
   }[type]);
 
 export const appModeVuex = type =>
   ({
-    test: "http://192.168.8.105:8000/api",
-    laravel: "http://192.168.8.105:8000/api",
-    production: "http://192.168.8.105:8000/api",
-    redirect_uri_prod: "http://192.168.8.105:8080/#/",
-    redirect_uri_dev: "http://192.168.8.105:8080/#/"
+    test: "http://192.168.8.105:8888/callback",
+    laravel: "http://192.168.8.105:8888/callback",
+    production: "http://192.168.8.105:8888/callback",
+    redirect_uri_prod: "http://192.168.8.105:8888/callback",
+    redirect_uri_dev: "http://192.168.8.105:8888/callback"
     // get mobile () {
     //   return Platform.is.cordova ? this.local : this.test
     // }

@@ -3,6 +3,8 @@
 .thumbs.db
 node_modules
 /dist
+/passport-spotify/node_modules
+/passport-spotify/examples/login/node_modules
 /src-cordova/node_modules
 /src-cordova/platforms
 /src-cordova/plugins

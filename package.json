@@ -9,14 +9,19 @@
   "private": true,
   "scripts": {
     "lint": "eslint --ext .js,.vue src",
-    "test": "echo \"No test specified\" && exit 0"
+    "test": "echo \"No test specified\" && exit 0",
+    "auth-server": "node passport-spotify/examples/login/app.js"
   },
   "dependencies": {
     "@quasar/extras": "^1.5.2",
-    "axios": "0.19.0",
+    "axios": "^0.19.0",
+    "cors": "^2.8.5",
     "datafire": "^2.26.2",
     "hellojs": "^1.18.4",
     "quasar": "^1.9.3",
+    "spotify-web-api-js": "^1.2.0",
+    "spotify-web-api-node": "^4.0.0",
+    "url": "^0.11.0",
     "vee-validate": "2.2.13",
     "vue-content-loader": "0.2.2",
     "vue-hellojs": "0.0.4",

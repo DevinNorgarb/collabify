@@ -1,13 +1,16 @@
 var express = require("express"),
   session = require("express-session"),
   passport = require("passport"),
-  swig = require("swig"),
+  // swig = require("swig"),
   SpotifyStrategy = require("../../lib/passport-spotify/index").Strategy;
 
-var consolidate = require("consolidate");
+// var consolidate = require("consolidate");
 
-var appKey = "bb200fb215c346448b3c34bbccaac25d";
-var appSecret = "0902db0eb5274d4a8f3ec07d3d00d2c8";
+var axios = require("axios");
+
+var appKey = "4fcf1eee54994be6a3f87183e80d4943";
+var appSecret = "203f38db980246d78aee9b1eb1b16aea";
+const querystring = require("querystring");
 
 // Passport session setup.
 //   To support persistent login sessions, Passport needs to be able to
@@ -17,12 +20,18 @@ var appSecret = "0902db0eb5274d4a8f3ec07d3d00d2c8";
 //   have a database of user records, the complete spotify profile is serialized
 //   and deserialized.
 passport.serializeUser(function(user, done) {
+  // console.log(user);
+
   done(null, user);
 });
 
 passport.deserializeUser(function(obj, done) {
   done(null, obj);
 });
+
+var accessToken = "";
+var refreshToken = "";
+var profile = "";
 
 // Use the SpotifyStrategy within Passport.
 //   Strategies in Passport require a `verify` function, which accept
@@ -42,6 +51,15 @@ passport.use(
         // represent the logged-in user. In a typical application, you would want
         // to associate the spotify account with a user record in your database,
         // and return that user instead.
+        // return profile;
+
+        // console.log();
+        accessToken = accessToken;
+        refreshToken = refreshToken;
+
+        profile.accessToken = accessToken;
+        profile.refreshToken = refreshToken;
+
         return done(null, profile);
       });
     }
@@ -50,9 +68,9 @@ passport.use(
 
 var app = express();
 
-// configure Express
-app.set("views", __dirname + "/views");
-app.set("view engine", "ejs");
+// // configure Express
+// app.set("views", __dirname + "/views");
+// app.set("view engine", "ejs");
 
 app.use(
   session({ secret: "keyboard cat", resave: true, saveUninitialized: true })
@@ -62,20 +80,31 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(express.static(__dirname + "/public"));
+// app.use(express.static(__dirname + "/public"));
 
-app.engine("html", consolidate.swig);
+// // app.engine("html", consolidate.swig);
 
 app.get("/", function(req, res) {
-  res.render("index.html", { user: req.user });
+  // console.log(req, res);
+
+  const query = querystring.stringify(req.user);
+  const request = querystring.stringify(res);
+
+  // console.log("rediirecting");
+
+  // axios;
+
+  return res.redirect(`http://192.168.8.105:8080/#/home?user=${req.user}`);
+
+  // res.render("index.html", { user: req.user });
 });
 
 app.get("/account", ensureAuthenticated, function(req, res) {
-  res.render("account.html", { user: req.user });
+  // res.render("account.html", { user: req.user });
 });
 
 app.get("/login", function(req, res) {
-  res.render("login.html", { user: req.user });
+  // res.render("login.html", { user: req.user });
 });
 
 // GET /auth/spotify
@@ -86,8 +115,26 @@ app.get("/login", function(req, res) {
 app.get(
   "/auth/spotify",
   passport.authenticate("spotify", {
-    scope: ["user-read-email", "user-read-private"],
-    showDialog: true,
+    scope: [
+      "user-read-private",
+      "user-read-email",
+      "playlist-read-collaborative",
+      "playlist-modify-private",
+      "playlist-modify-public",
+      "playlist-read-private",
+      "user-modify-playback-state",
+      "user-read-playback-state",
+      "user-read-currently-playing",
+      "user-library-modify",
+      "user-library-read",
+      "user-follow-modify",
+      "user-follow-read",
+      "user-read-recently-played",
+      "user-top-read",
+      "streaming",
+      "app-remote-control",
+    ],
+    // showDialog: true,
   }),
   function(req, res) {
     // The request will be redirected to spotify for authentication, so this
@@ -104,7 +151,10 @@ app.get(
   "/callback",
   passport.authenticate("spotify", { failureRedirect: "/login" }),
   function(req, res) {
-    res.redirect("/");
+    const query = querystring.stringify(req.user);
+    const request = querystring.stringify(res);
+
+    return res.redirect(`http://192.168.8.105:8080/home?user=${query}`);
   }
 );
 
@@ -126,3 +176,20 @@ function ensureAuthenticated(req, res, next) {
   }
   res.redirect("/login");
 }
+
+// const SpotifyStrategy = require('passport-spotify').Strategy;
+
+// passport.use(
+//   new SpotifyStrategy(
+//     {
+//       clientID: appKey,
+//       clientSecret: appSecret,
+//       callbackURL: 'http://192.168.8.105:8888/auth/spotify/callback'
+//     },
+//     function(accessToken, refreshToken, expires_in, profile, done) {
+//       User.findOrCreate({ spotifyId: profile.id }, function(err, user) {
+//         return done(err, user);
+//       });
+//     }
+//   )
+// );

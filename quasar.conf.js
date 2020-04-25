@@ -11,6 +11,7 @@ module.exports = function(ctx) {
       "vuelidate",
       "vee-validate",
       "vue-signature-pad",
+      // "hello",
       "custom-input"
     ],
 
@@ -20,7 +21,7 @@ module.exports = function(ctx) {
     extras: [
       // 'ionicons-v4',
       "mdi-v4",
-      // 'fontawesome-v5',
+      'fontawesome-v5',
       // 'eva-icons',
       // 'themify',
       // 'roboto-font-latin-ext', // this or either 'roboto-font', NEVER both!
@@ -33,7 +34,6 @@ module.exports = function(ctx) {
     framework: {
       // iconSet: 'ionicons-v4', // Quasar icon set
       // lang: 'de', // Quasar language pack
-
       // Possible values for "all":
       // * 'auto' - Auto-import needed Quasar components & directives
       //            (slightly higher compile time; next to minimum bundle size; most convenient)
@@ -58,6 +58,7 @@ module.exports = function(ctx) {
         // cordova: {
         //   backButtonExit: false
         // },
+        dark: "auto",
         loadingBar: {
           color: "accent"
         }

@@ -129,6 +129,7 @@ export default {
       alert('Touch held!')
     },
     checkTabs () {
+
       this.$nextTick(() => {
         this.hasTabs = !!(this.$refs.toolbarTab || this.$refs.mainTab)
         // if (this.$refs.toolbarTab) {
@@ -168,6 +169,8 @@ export default {
   },
   mounted () {
     console.log(this.$q.platform.is.desktop)
+    this.$q.dark.set(true) // or false or "auto"
+
     this.checkTabs()
   },
   updated: function () {

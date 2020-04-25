@@ -7,5 +7,6 @@ export default async ({ Vue }) => {
   // are exported
   Object.keys(BaseComponents).forEach(v => {
     Vue.component(v, BaseComponents[v])
+
   })
 }

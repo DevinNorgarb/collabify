@@ -32,3 +32,21 @@ export const login = async ({ commit, dispatch, getters }, payload) => {
     throw e;
   }
 };
+
+
+export const getLikedTracks = async ({ commit, dispatch, getters }, payload) => {
+
+    spotifyApi.getMySavedTracks({
+        limit : payload.limit,
+        offset: payload.offset
+      })
+      .then(function(data) {
+        commit("updateField", { path: "user", value: payload });
+        commit("updateField", { path: "token", value: payload.accessToken });
+      }, function(err) {
+        console.log('Something went wrong!', err);
+      });
+
+
+};
+

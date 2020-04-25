@@ -16,6 +16,20 @@ const routes = [
     ]
   },
   {
+    path: '/voice-control',
+    component: () => import('layouts/MyLayout.vue'),
+    children: [
+      {
+        path: '',
+        meta: {
+          title: 'Voice Control',
+          needAuth: true
+        },
+        component: () => import('pages/VoiceControl/VoiceControlPage.vue')
+      }
+    ]
+  },
+  {
     path: '/autocomplete',
     meta: {
       title: 'Autocomplete'

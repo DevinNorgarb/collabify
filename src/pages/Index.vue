@@ -1,6 +1,15 @@
 <template>
   <q-page class="flex flex-center">
-    <div  class="column welcome-text q-pb-md">
+    <div class="column welcome-text q-pb-md">
+          <!-- <q-route-tab
+      icon="mail"
+      :label="tab.meta.tabLabel"
+      :to="`/table-extensions/${tab.path}`"
+      exact
+      v-for="tab in tabs"
+      :key="tab.name"
+    /> -->
+  </q-tabs>
       <div>
         <!-- {{$store.spotifyAuth}} -->
         <h5>Welcome to commandify <br> </h5>
@@ -8,16 +17,16 @@
       </div>
       <div>
         <div>
-                    <div>
-                <q-btn
-                  class="full-width"
-                  @click="$router.replace('/voice-control')"
-                  color="primary"
-                  label="Get Started"
-                  size="18px"
-                />
+          <div>
+            <q-btn
+              class="full-width"
+              @click="$router.replace('/voice-control')"
+              color="primary"
+              label="Get Started"
+              size="18px"
+            />
 
-              </div>
+          </div>
         </div>
       </div>
       <div>
@@ -32,6 +41,8 @@
 <style></style>
 
 <script>
+// import { tabs } from '../routes'
+
 import SpotifyAuth from "../features/Auth/ui/SpotifyAuth.vue";
 import { mapGetters } from 'vuex'
 export default {
@@ -47,9 +58,9 @@ export default {
       user: {}
     }
   },
-  mounted() {
+  mounted () {
     // this.user = this.$store.state.spotifyAuth
-  console.log(this.user);
+    console.log(this.user);
 
   },
   created () {

@@ -24,7 +24,7 @@ export const login = async ({ commit, dispatch, getters }, payload) => {
       { root: true }
     );
     console.log(payload);
-
+    commit("updateField", { path: "user", value: payload });
     commit("updateField", { path: "token", value: payload.accessToken });
     setAuthHeader(getters["getField"]("token"));
   } catch (e) {

@@ -1,11 +1,12 @@
 <template>
   <q-page class="flex flex-center">
-    <div class="column justify-center items-center">
+    <div  class="column welcome-text q-pb-md">
       <div>
-        <h5>Please Sign in to Spotify</h5>
+        <!-- {{$store.spotifyAuth}} -->
+        <h5>Welcome to commandify <br> </h5>
+        <h5 class="text-center"> {{$store.state.spotifyAuth.user.displayName}}</h5>
       </div>
       <div>
-        <spotify-auth/>
       </div>
       <div>
         <code>
@@ -20,6 +21,7 @@
 
 <script>
 import SpotifyAuth from "../features/Auth/ui/SpotifyAuth.vue";
+import { mapGetters } from 'vuex'
 export default {
   name: 'PageIndex',
   components: {
@@ -29,55 +31,25 @@ export default {
     return {
       color: 'primary',
       response: '',
-      loading: false
+      loading: false,
+      user: {}
     }
   },
+  mounted() {
+    // this.user = this.$store.state.spotifyAuth
+  console.log(this.user);
+
+  },
   created () {
-    console.log('hey index.vue')
+    console.log('hey index.vue', this.$store.state)
+
+  },
+  computed: {
+    // ...mapGetters({
+    //   store: 'spotifyAuth/getField'
+    // })
   },
   methods: {
-    // async makeRequest () {
-    //   let response
-    //   let color = 'negative'
-    //   this.loading = true
-
-    //   try {
-    //     response = ''
-    //     let req = await fetch(process.env.api + '/test')
-
-    //     if (!req.ok) throw new Error('error request')
-
-    //     let {data} = await req.json()
-    //     response = data
-    //     color = 'positive'
-    //   } catch (err) {
-    //     console.log(err)
-    //     response = err.message
-    //   }
-
-    //   setTimeout(() => {
-    //     this.response = response
-    //     this.color = color
-    //     this.loading = false
-    //   }, 700)
-    // }
-
-    auth (network) {
-      const hello = this.hello;
-      hello(network).login().then(() => {
-        const authRes = hello(network).getAuthResponse();
-        /*
-          performs operations using the token from authRes
-        */
-        hello(network).api('me').then(function (json) {
-          const profile = json;
-          /*
-            performs operations using the user info from profile
-          */
-        });
-      })
-    },
-
     makeRequest () {
       //   let response
       //   let color = 'negative'
@@ -116,3 +88,8 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+.welcome-text {
+  margin-bottom: 30px;
+}
+</style>

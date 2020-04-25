@@ -18,9 +18,9 @@
           <q-icon name="menu" />
         </q-btn>
 
-        <q-toolbar-title>{{ pageMeta.title || '' }}</q-toolbar-title>
+        <q-toolbar-title>Commandify</q-toolbar-title>
 
-        <div>Quasar v{{ $q.version }}</div>
+        <!-- <div>Commandify</div> -->
         <q-btn
           :icon="$q.dark.isActive ? 'mdi-brightness-5' : 'mdi-brightness-4'"
           flat

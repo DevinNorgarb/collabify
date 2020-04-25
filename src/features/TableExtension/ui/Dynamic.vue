@@ -61,6 +61,7 @@ export default {
       loading: false,
       filter: '',
       selected: [],
+      separator: "cell",
       columns: [
         {
           name: 'name',
@@ -78,7 +79,7 @@ export default {
           field: 'rating',
           sortable: true,
           isRating: true,
-          style: 'width: 150px'
+          style: 'width: 100%'
         },
         {
           name: 'calories',

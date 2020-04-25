@@ -2,7 +2,7 @@
   <div class="q-mb-xl q-pb-md">
     <!-- v-touch-pan.prevent.mouse.mouse-capture="handlePan" -->
     <q-table
-      :grid="mode === 'grid'"
+      :grid="false"
       :hide-header="mode === 'grid'"
       :data="localData"
       :columns="columns"
@@ -11,7 +11,7 @@
       :loading="innerLoading"
       :rows-per-page-options="rowOptions"
       :pagination.sync="paginationControl"
-      :separator="separator"
+      :separator="'horizontal'"
       :filter="filterOpts"
       :selection="selectionMode"
       :selected.sync="selected"
@@ -79,62 +79,6 @@
                 v-close-popup
               >{{ toggleSelectionMode ? 'Multiple' : 'Single' }}</q-tooltip>
             </q-toggle>
-            <q-select
-              :color="theme"
-              borderless
-              dense
-              v-model="rowSelectionType"
-              v-show="topRightOptions.cellLines"
-              :options="rowSelectionTypeOpts"
-              emit-value
-              map-options
-              hide-underline
-            />
-            <q-select
-              v-model="visibleColumns"
-              multiple
-              borderless
-              dense
-              options-dense
-              display-value="Fields"
-              emit-value
-              map-options
-              :options="columns"
-              option-value="name"
-              placeholder="Fields"
-              :color="theme"
-            />
-            <q-select
-              :color="theme"
-              borderless
-              dense
-              v-model="separator"
-              v-show="topRightOptions.cellLines && mode === 'list'"
-              :options="separatorOptions"
-              emit-value
-              map-options
-              hide-underline
-            />
-            <q-btn
-              flat
-              :color="theme"
-              round
-              dense
-              :icon="mode === 'grid' ? 'mdi-view-list' : 'mdi-view-grid'"
-              @click="
-                mode = mode === 'grid' ? 'list' : 'grid'
-                separator = mode === 'grid' ? 'none' : 'horizontal'
-              "
-            />
-            <q-btn
-              flat
-              :color="theme"
-              round
-              dense
-              :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-              @click="props.toggleFullscreen"
-              v-show="topRightOptions.fullscreenToggle"
-            />
           </div>
         </div>
 
@@ -192,7 +136,7 @@
                   class="ellipsis-2-lines"
                 >{{ props.cols[0].value }}</div>
               </q-card-section>
-              <q-separator />
+              <!-- <q-separator /> -->
               <q-card-section class="q-pa-none">
                 <q-list>
                   <template v-for="(col, i) in props.cols">
@@ -562,17 +506,14 @@ export default {
   data () {
     return {
       visibleColumns: [],
-      separator: 'horizontal',
+      separator: 'vertical',
       selected: [],
       mode: 'grid',
       paginationControl: this.pagination,
       // loading: this.innerLoading,
       selection: this.selectionMode,
       separatorOptions: [
-        { label: 'Horizontal', value: 'horizontal' },
-        { label: 'Vertical', value: 'vertical' },
-        { label: 'Cell', value: 'cell' },
-        { label: 'None', value: 'none' }
+        { label: 'Cell', value: 'cell' }
       ],
       rowSelectionTypeOpts: [
         { label: 'Click', value: 'click' },

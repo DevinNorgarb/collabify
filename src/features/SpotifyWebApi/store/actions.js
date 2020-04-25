@@ -41,8 +41,11 @@ export const getLikedTracks = async ({ commit, dispatch, getters }, payload) => 
         offset: payload.offset
       })
       .then(function(data) {
-        commit("updateField", { path: "user", value: payload });
-        commit("updateField", { path: "token", value: payload.accessToken });
+          console.log(data);
+
+        commit("updateField", { path: "liked_tracks", value: data });
+        commit("updateField", { path: "liked_tracks_limit", value: data });
+        commit("updateField", { path: "liked_tracks_offset", value: data });
       }, function(err) {
         console.log('Something went wrong!', err);
       });

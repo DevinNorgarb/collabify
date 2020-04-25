@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
@@ -29,6 +30,8 @@ class AuthController extends Controller
      */
     public function register(Request $request)
     {
+
+        dd($request->all());
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'email' => 'required|unique:users|email',
@@ -43,7 +46,7 @@ class AuthController extends Controller
         $input['password'] = bcrypt($input['password']);
         $user = User::create($input);
         $success['token'] = $user->createToken('myApp')->accessToken;
-        $success['name'] = $user->name;return response()->success('Registration successfull.', $success, 200);
-
+        $success['name'] = $user->name;
+        return response()->success('Registration successfull.', $success, 200);
     }
 }

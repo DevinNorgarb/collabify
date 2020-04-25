@@ -29,13 +29,24 @@
           @click="$q.dark.isActive ? $q.dark.set(false) : $q.dark.set(true)"
           no-caps
         >
-          <q-badge
-            color="red"
-            floating
-            transparent
-          >new</q-badge>
         </q-btn>
       </q-toolbar>
+        <q-tabs>
+          <q-route-tab
+            icon="record_voice_over"
+            to="/"
+            active-class
+            replace
+            label="Command"
+          />
+
+          <q-route-tab
+            icon="search"
+            to="/search-page"
+            replace
+            label="search"
+          />
+        </q-tabs>
       <router-view
         name="tabs"
         ref="mainTab"
@@ -124,7 +135,7 @@ export default {
   computed: {
     ...mapFields('commons', ['pageMeta'])
   },
-    preFetch ({ store }) {
+  preFetch ({ store }) {
     store.registerModule('foo', fooStoreModule)
     return store.dispatch('foo/inc')
   },
@@ -139,7 +150,7 @@ export default {
       this.$nextTick(() => {
         this.hasTabs = !!(this.$refs.toolbarTab || this.$refs.mainTab)
         // if (this.$refs.toolbarTab) {
-        //   this.hasTabs = true
+        this.hasTabs = true
         // } else if (this.$refs.mainTab) {
         //   this.hasTabs = true
         // } else {

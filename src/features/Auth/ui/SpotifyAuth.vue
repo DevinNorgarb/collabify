@@ -52,14 +52,36 @@ export default {
       console.log(val, oldVal);
       if (val.id) {
         val.name  = val.displayName
-
+        this.loading = true
         var rawData = JSON.parse(val._raw);
         val.email = rawData.email
-                // this.$store.dispatch('auth/register', val)
-        const res = await axios.post("http://192.168.8.105:8000/api/register", val);
-        console.log(res);
+        this.$store.dispatch('spotifyAuth/login', val)
+         .then(res => {
+          console.log('res', res)
+          // this.$q.notify({
+          //   icon: 'mdi-check-circle-outline',
+          //   message: res,
+          //   timeout: 1000,
+          //   color: 'positive'
+          // })
+                    this.$router.replace('/home')
+
+          // this.$emit('register-status', true)
+          // this.$refs.reg.hide()
+        })
+        .catch(e => {
+          console.log(e)
+          // this.$q.notify({
+          //   color: 'negative',
+          //   icon: 'mdi-alert-circle-outline',
+          //   message: e,
+          //   timeout: 1000
+          // })
+        })
+        .finally(_ => { this.loading = false })
 
 
+        // login
 
       }
 
@@ -163,8 +185,10 @@ export default {
           //   timeout: 1000,
           //   color: 'positive'
           // })
-          this.$emit('register-status', true)
-          this.$refs.reg.hide()
+                    this.$router.replace('/home')
+
+          // this.$emit('register-status', true)
+          // this.$refs.reg.hide()
         })
         .catch(e => {
           console.log(e)

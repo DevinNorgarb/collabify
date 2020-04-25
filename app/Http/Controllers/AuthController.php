@@ -31,20 +31,6 @@ class AuthController extends Controller
     public function register(Request $request)
     {
 
-        // dump($request->all());
-
-        // $password
-
-        // $validator = Validator::make($request->all(), [
-        //     'name' => 'required',
-        //     'email' => 'required|email',
-        //     // 'password' => 'required',
-        //     // 'confirm_password' => 'required|same:password',
-        // // ]);
-        // if ($validator->fails()) {
-        //     return response()->error($validator->errors(), null, 400);
-        // }
-
         $input = $request->all();
         $user = User::where("email", $input['email'])->first();
 

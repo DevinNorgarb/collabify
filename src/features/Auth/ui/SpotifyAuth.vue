@@ -51,6 +51,10 @@ export default {
     user: async function (val, oldVal) {
       console.log(val, oldVal);
       if (val.id) {
+        val.name  = val.displayName
+
+        var rawData = JSON.parse(val._raw);
+        val.email = rawData.email
                 // this.$store.dispatch('auth/register', val)
         const res = await axios.post("http://192.168.8.105:8000/api/register", val);
         console.log(res);

@@ -16,11 +16,11 @@ var appSecret = "0902db0eb5274d4a8f3ec07d3d00d2c8";
 //   the user by ID when deserializing. However, since this example does not
 //   have a database of user records, the complete spotify profile is serialized
 //   and deserialized.
-passport.serializeUser(function (user, done) {
+passport.serializeUser(function(user, done) {
   done(null, user);
 });
 
-passport.deserializeUser(function (obj, done) {
+passport.deserializeUser(function(obj, done) {
   done(null, obj);
 });
 
@@ -35,9 +35,9 @@ passport.use(
       clientSecret: appSecret,
       callbackURL: "http://192.168.8.105:8888/callback",
     },
-    function (accessToken, refreshToken, expires_in, profile, done) {
+    function(accessToken, refreshToken, expires_in, profile, done) {
       // asynchronous verification, for effect...
-      process.nextTick(function () {
+      process.nextTick(function() {
         // To keep the example simple, the user's spotify profile is returned to
         // represent the logged-in user. In a typical application, you would want
         // to associate the spotify account with a user record in your database,
@@ -66,15 +66,15 @@ app.use(express.static(__dirname + "/public"));
 
 app.engine("html", consolidate.swig);
 
-app.get("/", function (req, res) {
+app.get("/", function(req, res) {
   res.render("index.html", { user: req.user });
 });
 
-app.get("/account", ensureAuthenticated, function (req, res) {
+app.get("/account", ensureAuthenticated, function(req, res) {
   res.render("account.html", { user: req.user });
 });
 
-app.get("/login", function (req, res) {
+app.get("/login", function(req, res) {
   res.render("login.html", { user: req.user });
 });
 
@@ -89,7 +89,7 @@ app.get(
     scope: ["user-read-email", "user-read-private"],
     showDialog: true,
   }),
-  function (req, res) {
+  function(req, res) {
     // The request will be redirected to spotify for authentication, so this
     // function will not be called.
   }
@@ -103,12 +103,12 @@ app.get(
 app.get(
   "/callback",
   passport.authenticate("spotify", { failureRedirect: "/login" }),
-  function (req, res) {
+  function(req, res) {
     res.redirect("/");
   }
 );
 
-app.get("/logout", function (req, res) {
+app.get("/logout", function(req, res) {
   req.logout();
   res.redirect("/");
 });

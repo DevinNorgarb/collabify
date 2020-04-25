@@ -7,6 +7,18 @@
         <h5 class="text-center"> {{$store.state.spotifyAuth.user.displayName}}</h5>
       </div>
       <div>
+        <div>
+                    <div>
+                <q-btn
+                  class="full-width"
+                  @click="$router.replace('/voice-control')"
+                  color="primary"
+                  label="Get Started"
+                  size="18px"
+                />
+
+              </div>
+        </div>
       </div>
       <div>
         <code>

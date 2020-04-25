@@ -1,40 +1,40 @@
 <template>
   <q-page padding>
     <!-- content -->
-    <q-page class="q-pa-md body-class">
-      <template v-if="data">
-        <dynamic-table
-          :title="'Search Music'"
-          :data="data"
-          :columns="columns"
-          :actions="['action 1', 'action 2', 'action 3']"
-          :search-field="filter"
-          :inner-loading="loading"
-          theme="secondary"
-          @search-change="filter = $event"
-          :selection-mode="selectionMode"
-          @selection-mode-change="
+      <q-page class="q-pa-md body-class">
+    <template v-if="data">
+      <dynamic-table
+        :title="'Search Music'"
+        :data="data"
+        :columns="columns"
+        :actions="['action 1', 'action 2', 'action 3']"
+        :search-field="filter"
+        :inner-loading="loading"
+        theme="secondary"
+        @search-change="filter = $event"
+        :selection-mode="selectionMode"
+        @selection-mode-change="
           selectionMode =  'single'
           modeChanged()
         "
-          @action-1="doAction"
-          @action-2="doAction"
-          :grid="$q.platform.is.mobile"
-          actions-display-type="bottom menu"
-          action-invoke-type="instant"
-          search-input-placeholder="Search Name"
-          search
-          grid-card-style="vertical"
-          :row-options="[5, 10, 20, 30, 40, 50]"
-          :pagination="pagination"
-          ref="table"
-          @update:pagination="pagChange"
-        />
-      </template>
-      <template v-else>
-        <span>No data, do something like fetch data from server etc...</span>
-      </template>
-    </q-page>
+        @action-1="doAction"
+        @action-2="doAction"
+        :grid="$q.platform.is.mobile"
+        actions-display-type="bottom menu"
+        action-invoke-type="instant"
+        search-input-placeholder="Search Name"
+        search
+        grid-card-style="vertical"
+        :row-options="[5, 10, 20, 30, 40, 50]"
+        :pagination="pagination"
+        ref="table"
+        @update:pagination="pagChange"
+      />
+    </template>
+    <template v-else>
+      <span>No data, do something like fetch data from server etc...</span>
+    </template>
+  </q-page>
   </q-page>
 </template>
 
@@ -44,26 +44,26 @@ import DynamicTable from 'components/Tables/Dynamic'
 var SpotifyWebApi = require('spotify-web-api-node');
 
 export default {
-  components: {
+    components: {
     DynamicTable
   },
-  name: 'VoiceControlPage',
-  mounted () {
+  name: 'SearchPage',
+  mounted() {
     console.log(this.$store.state.spotifyAuth.user.accessToken);
 
     var spotifyApi = new SpotifyWebApi({});
     spotifyApi.setAccessToken(this.$store.state.spotifyAuth.user.accessToken);
 
     spotifyApi.getArtistAlbums('43ZHCT0cAZBISjO8DG9PnE').then(
-      function (data) {
+      function(data) {
         console.log('Artist albums', data.body);
       },
-      function (err) {
+      function(err) {
         console.error(err);
       }
     );
   },
-  methods: {
+    methods: {
     modeChanged () {
       console.log('modechanged', this.selectionMode)
     },

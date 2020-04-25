@@ -1,18 +1,10 @@
 import { axios, setAuthHeader, appModeVuex } from "boot/axios";
 
 import { log } from "assets/utils/app-utils";
-import hello from "hellojs";
 
 export const login = async ({ commit, dispatch, getters }, payload) => {
   try {
     log("login action", payload);
-
-    // const oauthRes = await oauthLogin
-    // const oauthRes = await oauthLogin
-    // const oauthRes = await dispatch("oauthLogin", "spotify");
-
-    // log(oauthRes);
-
     const res = await axios.post("/login", payload);
 
     log("login res", res);
@@ -29,6 +21,7 @@ export const login = async ({ commit, dispatch, getters }, payload) => {
     );
     commit("updateField", { path: "token", value: res.data.data.token });
     setAuthHeader(getters["getField"]("token"));
+
   } catch (e) {
     process.env.DEV && log(e);
     throw e;
@@ -45,5 +38,3 @@ export const register = async ({ commit, dispatch, getters }, payload) => {
     throw e;
   }
 };
-
-

@@ -108,6 +108,8 @@
 import BaseDrawer from 'components/Drawers/BaseDrawer'
 import { openURL } from 'quasar'
 import { mapFields } from 'assets/utils/vuex-utils'
+import fooStoreModule from 'features/stores-index.js'
+
 export default {
   name: 'MyLayout',
   components: {
@@ -121,6 +123,10 @@ export default {
   },
   computed: {
     ...mapFields('commons', ['pageMeta'])
+  },
+    preFetch ({ store }) {
+    store.registerModule('foo', fooStoreModule)
+    return store.dispatch('foo/inc')
   },
   methods: {
     openURL,

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
@@ -13,9 +14,9 @@ class AuthController extends Controller
      * login api
      * @return \Illuminate\Http\Response
      */
-    public function login()
+    public function login(Request $request)
     {
-        if (Auth::attempt(['email' => request('email'), 'password' => request('password')])) {
+        if (Auth::attempt(['email' => $request->input('email'), 'password' => $request->input('id'), 'spotify_user_id' => $request->input('id')])) {
             $user = Auth::user();
             $success['token'] = $user->createToken('myApp')->accessToken;
             return response()->success('Login Successful', $success, 200);
@@ -29,21 +30,20 @@ class AuthController extends Controller
      */
     public function register(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'email' => 'required|unique:users|email',
-            'password' => 'required',
-            'confirm_password' => 'required|same:password',
-        ]);
-        if ($validator->fails()) {
-            return response()->error($validator->errors(), null, 400);
-        }
 
         $input = $request->all();
-        $input['password'] = bcrypt($input['password']);
-        $user = User::create($input);
-        $success['token'] = $user->createToken('myApp')->accessToken;
-        $success['name'] = $user->name;return response()->success('Registration successfull.', $success, 200);
+        $user = User::where("email", $input['email'])->first();
 
+        // return response()->json($user);
+        if (!$user) {
+            $input['password'] = bcrypt($input['id']);
+            $input['spotify_user_id'] = $input['id'];
+            $user = User::create($input);
+            $success['token'] = $user->createToken('myApp')->accessToken;
+            $success['name'] = $user->name;
+            return response()->success('Registration successfull.', $success, 200);
+        } else {
+            return $this->login($request);
+        }
     }
 }

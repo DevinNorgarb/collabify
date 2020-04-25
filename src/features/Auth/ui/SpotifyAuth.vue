@@ -18,18 +18,21 @@
 <script>
 import { log } from 'assets/utils/app-utils'
 import { required, email, sameAs } from 'vuelidate/lib/validators'
+import { axios, setAuthHeader, appModeVuex } from "boot/axios";
+
 
 const fields = () => ({
   email: null,
   password: null,
   confirm_password: null,
-  name: null,
-  user: {}
+  name: null
+  // user: {}
 })
 export default {
   name: "SpotifyAuth",
   data () {
     return {
+      user: {},
       loading: false,
       form: {
         ...fields()
@@ -42,6 +45,46 @@ export default {
       password: { required },
       confirm_password: { required, sameAsPassword: sameAs('password') },
       name: { required }
+    }
+  },
+  watch: {
+    user: async function (val, oldVal) {
+      console.log(val, oldVal);
+      if (val.id) {
+        val.name  = val.displayName
+        this.loading = true
+        var rawData = JSON.parse(val._raw);
+        val.email = rawData.email
+        this.$store.dispatch('spotifyAuth/login', val)
+         .then(res => {
+          console.log('res', res)
+          // this.$q.notify({
+          //   icon: 'mdi-check-circle-outline',
+          //   message: res,
+          //   timeout: 1000,
+          //   color: 'positive'
+          // })
+                    this.$router.replace('/home')
+
+          // this.$emit('register-status', true)
+          // this.$refs.reg.hide()
+        })
+        .catch(e => {
+          console.log(e)
+          // this.$q.notify({
+          //   color: 'negative',
+          //   icon: 'mdi-alert-circle-outline',
+          //   message: e,
+          //   timeout: 1000
+          // })
+        })
+        .finally(_ => { this.loading = false })
+
+
+        // login
+
+      }
+
     }
   },
   methods: {
@@ -57,10 +100,7 @@ export default {
 
 
       var authorizeURL = `http://192.168.8.105:8888/auth/spotify`;
-      // var endUrl = "https://commandify.devswebdev.com";
       var endUrl = "http://192.168.8.105:8080";
-      // this.getUser.redirectUri;
-
       var browser = cordova.InAppBrowser.open(
         authorizeURL,
         "_blank",
@@ -84,11 +124,10 @@ export default {
         var url = new URL(url_string);
         var params = this.parse_query_string(url.search);
 
-        this.user = params;
-        console.log(this.user);
 
         if (evt.url.includes(endUrl)) {
           browser.close();
+          this.user = params;
           window.plugins.spinnerDialog.hide();
         }
       });
@@ -146,8 +185,10 @@ export default {
           //   timeout: 1000,
           //   color: 'positive'
           // })
-          this.$emit('register-status', true)
-          this.$refs.reg.hide()
+                    this.$router.replace('/home')
+
+          // this.$emit('register-status', true)
+          // this.$refs.reg.hide()
         })
         .catch(e => {
           console.log(e)

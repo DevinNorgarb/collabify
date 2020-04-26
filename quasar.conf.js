@@ -12,6 +12,7 @@ module.exports = function(ctx) {
       "vee-validate",
       "vue-signature-pad",
       // "hello",
+      "VoiceRecognition",
       "custom-input"
     ],
 

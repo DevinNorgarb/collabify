@@ -1,15 +1,7 @@
 <template>
   <q-page class="flex flex-center">
     <div class="column welcome-text q-pb-md">
-          <!-- <q-route-tab
-      icon="mail"
-      :label="tab.meta.tabLabel"
-      :to="`/table-extensions/${tab.path}`"
-      exact
-      v-for="tab in tabs"
-      :key="tab.name"
-    /> -->
-  </q-tabs>
+
       <div>
         <!-- {{$store.spotifyAuth}} -->
         <h5>Welcome to commandify <br> </h5>

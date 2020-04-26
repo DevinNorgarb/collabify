@@ -109,9 +109,8 @@ const defaultInterceptor = store => {
 
 const appMode = type =>
   ({
-    test: "http://192.168.8.105:8888/callback",
-    laravel: "http://192.168.8.105:8888/callback",
-    production: "http://192.168.8.105:8888/callback",
+    laravel: "http://192.168.8.105:8000/callback",
+    production: "http://192.168.8.105:8000/callback",
     redirect_uri_prod: "http://192.168.8.105:8888/callback",
     redirect_uri_dev: "http://192.168.8.105:8888/callback"    // get mobile () {
     //   return Platform.is.cordova ? this.local : this.test
@@ -176,34 +175,6 @@ export const unSetAuthHeader = () => {
 
 export const setBaseUrl = strUrl => {
   axios.defaults.baseURL = strUrl;
-};
-
-export const oauthLogin = store => {
-  var SPOTIFY_CLIENT_ID = "4fcf1eee54994be6a3f87183e80d4943";
-
-  hello.on("auth.login", function(r) {
-    // Get Profile
-    var hi = hello(r.network);
-    hi.api("me").then(function(p) {
-      document.getElementById(r.network).innerHTML =
-        "<img src='" +
-        p.thumbnail +
-        "' width=24/>Connected to " +
-        r.network +
-        " as " +
-        p.name;
-    });
-  });
-
-  hello.init(
-    {
-      spotify: SPOTIFY_CLIENT_ID
-    },
-    {
-      redirect_uri: appModeVuex(process.env.DEV ? "laravel" : "production"),
-      oauth_proxy: "https://auth-server.herokuapp.com/proxy"
-    }
-  );
 };
 
 /**

@@ -2,7 +2,7 @@
   <div class="q-mb-xl q-pb-md">
     <!-- v-touch-pan.prevent.mouse.mouse-capture="handlePan" -->
     <q-table
-      :grid="mode === 'grid'"
+      :grid="false"
       :hide-header="mode === 'grid'"
       :data="localData"
       :columns="columns"
@@ -11,7 +11,7 @@
       :loading="innerLoading"
       :rows-per-page-options="rowOptions"
       :pagination.sync="paginationControl"
-      :separator="separator"
+      :separator="'horizontal'"
       :filter="filterOpts"
       :selection="selectionMode"
       :selected.sync="selected"
@@ -79,62 +79,6 @@
                 v-close-popup
               >{{ toggleSelectionMode ? 'Multiple' : 'Single' }}</q-tooltip>
             </q-toggle>
-            <q-select
-              :color="theme"
-              borderless
-              dense
-              v-model="rowSelectionType"
-              v-show="topRightOptions.cellLines"
-              :options="rowSelectionTypeOpts"
-              emit-value
-              map-options
-              hide-underline
-            />
-            <q-select
-              v-model="visibleColumns"
-              multiple
-              borderless
-              dense
-              options-dense
-              display-value="Fields"
-              emit-value
-              map-options
-              :options="columns"
-              option-value="name"
-              placeholder="Fields"
-              :color="theme"
-            />
-            <q-select
-              :color="theme"
-              borderless
-              dense
-              v-model="separator"
-              v-show="topRightOptions.cellLines && mode === 'list'"
-              :options="separatorOptions"
-              emit-value
-              map-options
-              hide-underline
-            />
-            <q-btn
-              flat
-              :color="theme"
-              round
-              dense
-              :icon="mode === 'grid' ? 'mdi-view-list' : 'mdi-view-grid'"
-              @click="
-                mode = mode === 'grid' ? 'list' : 'grid'
-                separator = mode === 'grid' ? 'none' : 'horizontal'
-              "
-            />
-            <q-btn
-              flat
-              :color="theme"
-              round
-              dense
-              :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-              @click="props.toggleFullscreen"
-              v-show="topRightOptions.fullscreenToggle"
-            />
           </div>
         </div>
 
@@ -192,7 +136,7 @@
                   class="ellipsis-2-lines"
                 >{{ props.cols[0].value }}</div>
               </q-card-section>
-              <q-separator />
+              <!-- <q-separator /> -->
               <q-card-section class="q-pa-none">
                 <q-list>
                   <template v-for="(col, i) in props.cols">
@@ -562,17 +506,14 @@ export default {
   data () {
     return {
       visibleColumns: [],
-      separator: 'horizontal',
+      separator: 'vertical',
       selected: [],
       mode: 'grid',
       paginationControl: this.pagination,
       // loading: this.innerLoading,
       selection: this.selectionMode,
       separatorOptions: [
-        { label: 'Horizontal', value: 'horizontal' },
-        { label: 'Vertical', value: 'vertical' },
-        { label: 'Cell', value: 'cell' },
-        { label: 'None', value: 'none' }
+        { label: 'Cell', value: 'cell' }
       ],
       rowSelectionTypeOpts: [
         { label: 'Click', value: 'click' },
@@ -665,7 +606,6 @@ export default {
   methods: {
     setRowIndex () {
       this.localData = this.$attrs['row-key'] ? this.data : this.data.map((v, i) => ({ ...v, $_index: i }))
-      console.log('data w/index =>', this.data)
     },
     capitalize,
     notify (notif) {
@@ -679,16 +619,12 @@ export default {
 
       // native Javascript event
       // console.log(evt)
-      console.log('currentTarget', evt)
       if (evt.target.hasOwnProperty('__vue__')) {
-        console.log('isVue', evt.target)
       }
       if (info.isFirst) {
         this.panning = true
-        console.log('pan first', info, evt)
       } else if (info.isFinal) {
         this.panning = false
-        console.log('pan final', info, evt)
       }
     },
     colSelector () {
@@ -708,8 +644,6 @@ export default {
                 // parentTr.selected = false
               }
             )
-
-            console.log(b)
             // el.classList.add('highlight')
           })
         })
@@ -721,11 +655,9 @@ export default {
               this.currentRow = parentTr
               // this.previousRow = this.previousRow.key !== this.currentRow
               if (this.currentRow.key !== this.previousRow.key) {
-                console.log('not', this.currentRow, this.previousRow)
                 this.previousRow = this.currentRow
                 parentTr.selected = !this.previousRow.selected
               }
-              console.log('cur prev', this.currentRow.key, this.previousRow.key)
             }
 
             if (this.active && !el.classList.contains('highlight')) {
@@ -740,7 +672,6 @@ export default {
             // }
           })
         })
-        console.log(a, c)
 
         document.addEventListener('mouseup', ev => {
           this.active = false
@@ -751,7 +682,6 @@ export default {
               // parentTr.selected = false
             }
           )
-          console.log(b)
         })
       })
     }
@@ -774,23 +704,19 @@ export default {
     pagination: {
       deep: true,
       handler (newVal, oldVal) {
-        console.log('pag', newVal, oldVal)
         this.colSelector()
       }
     },
     paginationController: {
       deep: true,
       handler (newVal, oldVal) {
-        console.log('hanlder', newVal, oldVal)
         this.colSelector()
       }
     },
     data (v) {
       this.selected = []
-      console.log('dynamic-table', v)
     },
     computedRowSelectionType (val) {
-      console.log('event', val)
     },
     mode (v) {
       this.colSelector()
@@ -811,29 +737,21 @@ export default {
     }
 
     const tableEl = document.querySelectorAll('#table1')
-    console.log('tableEl mounted', tableEl)
-    console.log(tableEl[0].children[1].firstChild)
     const tb = document.getElementsByClassName('q-table')
-    console.log('ref', tb)
 
     this.$nextTick(() => {
       let g = tb[0].rows
-      console.log('tb', g)
-
       this.colSelector()
     })
   },
   created () {
-    console.log('screen', this.$attrs)
     this.loading = true
     setTimeout(() => {
       this.loading = false
     }, 1500)
 
-    console.log('actions', this.actionsDisplayType.includes('menu'))
 
     const tableEl = this.$refs.myTable
-    console.log('tableEl', tableEl)
     // this.$attrs['row-key'] || this.setRowIndex()
     this.setRowIndex()
   },
@@ -841,6 +759,7 @@ export default {
     // clear the dom listeners
   }
 }
+
 </script>
 
 <style lang="sass" scoped>

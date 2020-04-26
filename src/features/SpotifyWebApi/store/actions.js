@@ -1,4 +1,6 @@
 import { axios, setAuthHeader, appModeVuex } from "boot/axios";
+
+import EventBus from "assets/utils/EventBus";
 var SpotifyWebApi = require("spotify-web-api-node");
 
 import { log } from "assets/utils/app-utils";
@@ -22,6 +24,10 @@ export const login = async ({ commit, dispatch, getters, state }, payload) => {
     );
     commit("updateField", { path: "user", value: payload });
     commit("updateField", { path: "token", value: payload.accessToken });
+    commit("updateField", {
+      path: "refresh_token",
+      value: payload.refreshToken
+    });
     setAuthHeader(getters["getField"]("token"));
   } catch (e) {
     process.env.DEV && log(e);
@@ -34,7 +40,8 @@ export const getLikedTracks = async (
   payload
 ) => {
   var spotifyApi = new SpotifyWebApi({
-    accessToken: state.user.accessToken
+    accessToken: state.user.accessToken,
+    refreshToken: state.user.refreshToken
   });
 
   // spotifyApi.setAccessToken(this.$store.state.spotifyAuth.user.accessToken);
@@ -44,13 +51,7 @@ export const getLikedTracks = async (
       offset: payload.offset
     })
     .then(
-      function(data) {
-        console.log(data);
-
-        commit("updateField", { path: "liked_tracks", value: data });
-        commit("updateField", { path: "liked_tracks_limit", value: data });
-        commit("updateField", { path: "liked_tracks_offset", value: data });
-      },
+      function(data) {},
       function(err) {
         console.log("Something went wrong!", err);
       }
@@ -58,15 +59,34 @@ export const getLikedTracks = async (
 };
 
 export const search = async ({ commit, dispatch, getters, state }, payload) => {
-  //   console.log(state);
-  //   debugger;
+  console.log(state);
+
   var spotifyApi = new SpotifyWebApi({
     accessToken: state.user.accessToken
   });
 
-  spotifyApi.searchTracks(payload).then(
+  console.log(payload);
+
+  await spotifyApi.searchTracks(payload).then(
     function(data) {
       console.log(data.body);
+
+      var tracks = Object.assign({}, data.body.tracks);
+
+      // EventBus.$emit("search_tracks", tracks);
+
+      commit("updateField", {
+        path: "search_tracks",
+        value: data.body.tracks
+      });
+      // commit("updateField", {
+      //   path: "search_tracks",
+      //   value: data
+      // });
+      // commit("updateField", {
+      //   path: "search_tracks",
+      //   value: data
+      // });
     },
     function(err) {
       console.log("Something went wrong!", err);
@@ -76,6 +96,10 @@ export const search = async ({ commit, dispatch, getters, state }, payload) => {
   // Search playlists whose name or description contains 'workout'
   spotifyApi.searchPlaylists("workout").then(
     function(data) {
+      commit("updateField", {
+        path: "search_playlists",
+        value: data.body
+      });
       console.log("Found playlists are", data.body);
     },
     function(err) {
@@ -100,4 +124,5 @@ export const search = async ({ commit, dispatch, getters, state }, payload) => {
   //         console.log("Something went wrong!", err);
   //       }
   //     );
+  return state;
 };

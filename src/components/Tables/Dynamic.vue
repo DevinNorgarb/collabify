@@ -606,7 +606,6 @@ export default {
   methods: {
     setRowIndex () {
       this.localData = this.$attrs['row-key'] ? this.data : this.data.map((v, i) => ({ ...v, $_index: i }))
-      console.log('data w/index =>', this.data)
     },
     capitalize,
     notify (notif) {
@@ -620,16 +619,12 @@ export default {
 
       // native Javascript event
       // console.log(evt)
-      console.log('currentTarget', evt)
       if (evt.target.hasOwnProperty('__vue__')) {
-        console.log('isVue', evt.target)
       }
       if (info.isFirst) {
         this.panning = true
-        console.log('pan first', info, evt)
       } else if (info.isFinal) {
         this.panning = false
-        console.log('pan final', info, evt)
       }
     },
     colSelector () {
@@ -649,8 +644,6 @@ export default {
                 // parentTr.selected = false
               }
             )
-
-            console.log(b)
             // el.classList.add('highlight')
           })
         })
@@ -662,11 +655,9 @@ export default {
               this.currentRow = parentTr
               // this.previousRow = this.previousRow.key !== this.currentRow
               if (this.currentRow.key !== this.previousRow.key) {
-                console.log('not', this.currentRow, this.previousRow)
                 this.previousRow = this.currentRow
                 parentTr.selected = !this.previousRow.selected
               }
-              console.log('cur prev', this.currentRow.key, this.previousRow.key)
             }
 
             if (this.active && !el.classList.contains('highlight')) {
@@ -681,7 +672,6 @@ export default {
             // }
           })
         })
-        console.log(a, c)
 
         document.addEventListener('mouseup', ev => {
           this.active = false
@@ -692,7 +682,6 @@ export default {
               // parentTr.selected = false
             }
           )
-          console.log(b)
         })
       })
     }
@@ -715,23 +704,19 @@ export default {
     pagination: {
       deep: true,
       handler (newVal, oldVal) {
-        console.log('pag', newVal, oldVal)
         this.colSelector()
       }
     },
     paginationController: {
       deep: true,
       handler (newVal, oldVal) {
-        console.log('hanlder', newVal, oldVal)
         this.colSelector()
       }
     },
     data (v) {
       this.selected = []
-      console.log('dynamic-table', v)
     },
     computedRowSelectionType (val) {
-      console.log('event', val)
     },
     mode (v) {
       this.colSelector()
@@ -752,29 +737,21 @@ export default {
     }
 
     const tableEl = document.querySelectorAll('#table1')
-    console.log('tableEl mounted', tableEl)
-    console.log(tableEl[0].children[1].firstChild)
     const tb = document.getElementsByClassName('q-table')
-    console.log('ref', tb)
 
     this.$nextTick(() => {
       let g = tb[0].rows
-      console.log('tb', g)
-
       this.colSelector()
     })
   },
   created () {
-    console.log('screen', this.$attrs)
     this.loading = true
     setTimeout(() => {
       this.loading = false
     }, 1500)
 
-    console.log('actions', this.actionsDisplayType.includes('menu'))
 
     const tableEl = this.$refs.myTable
-    console.log('tableEl', tableEl)
     // this.$attrs['row-key'] || this.setRowIndex()
     this.setRowIndex()
   },
@@ -782,6 +759,7 @@ export default {
     // clear the dom listeners
   }
 }
+
 </script>
 
 <style lang="sass" scoped>

@@ -1,7 +1,6 @@
 <template>
-  <q-page padding>
-    <!-- content -->
-    <q-page class="q-pa-md body-class">
+  <!-- <q-page padding>
+\    <q-page class="q-pa-md body-class">
       <template v-if="data">
         <dynamic-table
           :title="'Search Music'"
@@ -35,35 +34,115 @@
         <span>No data, do something like fetch data from server etc...</span>
       </template>
     </q-page>
+  </q-page> -->
+
+  <q-page>
+    <div class="q-pa-md">
+      <q-input
+        class="q-pb-md"
+        outlined
+        :color="'primary'"
+        dense
+        :debounce="searchDebounce"
+        v-model="filter"
+        :placeholder=" 'Search'"
+        :class="$q.screen.width <= 405 ? 'full-width' : ''"
+      >
+        <template v-slot:append>
+          <q-icon
+            name="mdi-magnify"
+            :color="'primary'"
+          />
+        </template>
+      </q-input>
+      <q-table
+        style="height: 400px"
+        title="Treats"
+        :data="dataTracks"
+        :columns="columns"
+        row-key="id"
+        virtual-scroll
+        :pagination.sync="pagination"
+        :rows-per-page-options="[0]"
+      ></q-table>
+    </div>
   </q-page>
 </template>
 
 <script>
 import DynamicTable from 'components/Tables/Dynamic'
+import EventBus from "assets/utils/EventBus";
 
 var SpotifyWebApi = require('spotify-web-api-node');
-
+var dataTracksArray = []
 export default {
+  name: 'SearchPage',
   components: {
     DynamicTable
   },
-  name: 'SearchPage',
+  watch: {
+    tracks: function (val) {
+
+        console.log("track changes");
+
+      var test = Object.assign({}, val)
+
+      console.log(test[0].name);
+
+      this.dataTracks = []
+      // this.dataTracks.push(test)
+
+      // console.log(val);
+      // this.$nextTick(() => {
+      //   this.$set(this.dataTracks, "tracks", val)
+      // })
+
+        // this.$set(this.dataTracks, "tracks", val)
+
+        // this.dataTracks = val
+
+      //   this.$set(this.dataTracks, val)
+      // this.$nextTick(() => {
+      //   this.$set(this.prefixes[key], 'rpki', '1')
+
+      // })
+
+      // console.log("-----------------");
+
+      // // console.log(val);
+      // dataTracksArray = []
+
+      //   //  = val
+      // this.dataTracks = Object.assign({}, val)
+      for (let index = 0; index < val.length; index++) {
+        const element = val[index];
+
+        this.dataTracks.push(element)
+        // this.$nextTick(function () {
+        //   this.$set(this.dataTracks[index], 'name', element.name)
+        //   this.$set(this.dataTracks[index], 'id', element.id)
+        // })
+      }
+
+
+
+    },
+    filter: function (val, oldval) {
+      this.$store.dispatch('spotifyAuth/search', val)
+      this.$nextTick(() => {
+        this.$set(this.dataTracks, "tracks", val)
+      })
+  // this.
+  }
+  },
+  computed: {
+    tracks () {
+      // this.$set(this.dataTracksArray, "tracks", ...this.$store.state.spotifyAuth.search_tracks.items)
+      return this.$store.state.spotifyAuth.search_tracks.items
+    }
+  },
   mounted () {
     console.log(this.$store.state.spotifyAuth.user.accessToken);
-
-    var spotifyApi = new SpotifyWebApi({});
-    console.log(spotifyApi);
-
-    spotifyApi.setAccessToken(this.$store.state.spotifyAuth.user.accessToken);
-
-    spotifyApi.getArtistAlbums('43ZHCT0cAZBISjO8DG9PnE').then(
-      function (data) {
-        console.log('Artist albums', data.body);
-      },
-      function (err) {
-        console.error(err);
-      }
-    );
   },
   methods: {
     modeChanged () {
@@ -79,82 +158,72 @@ export default {
   },
   data () {
     return {
+
+      dataTracksArray: [],
+      searchDebounce: 1000,
+      dataTracks: [],
       pagination: { rowsPerPage: 10, page: 1 },
       tableTitle: 'Search Music',
-      selectionMode: 'single',
+      selectionMode: 'none',
       loading: false,
       filter: '',
-      selected: [],
+      // selected: [],
       columns: [
         {
           name: 'name',
           required: true,
-          label: 'Dessert (100g serving)',
+          label: 'name',
           align: 'left',
-          field: row => row.name,
-          format: val => `${val}`,
+          field: 'name',
+          // format: val => `${val}`,
           sortable: true
         },
         {
-          name: 'rating',
+          name: 'id',
+          align: 'center',
+          label: 'id',
+          field: 'id',
+          sortable: true,
+          // isRating: false,
+          // style: 'width: 150px'
+        },
+        {
+          name: 'artist',
           align: 'center',
           label: 'Rating',
-          field: 'rating',
+          field: row => row.artists.map(artist => {
+            return artist.name + " "
+          }),
           sortable: true,
-          isRating: true,
-          style: 'width: 150px'
-        },
-        {
-          name: 'calories',
-          align: 'center',
-          label: 'Calories',
-          field: 'calories',
-          sortable: true
-        },
-        { name: 'fat', label: 'Fat (g)', field: 'fat', sortable: true },
-        { name: 'carbs', label: 'Carbs (g)', field: 'carbs' },
-        { name: 'protein', label: 'Protein (g)', field: 'protein' },
-        { name: 'sodium', label: 'Sodium (mg)', field: 'sodium' },
-        {
-          name: 'calcium',
-          label: 'Calcium (%)',
-          field: 'calcium',
-          sortable: true,
-          sort: (a, b) => parseInt(a, 10) - parseInt(b, 10)
-        },
-        {
-          name: 'iron',
-          label: 'Iron (%)',
-          field: 'iron',
-          sortable: true,
-          sort: (a, b) => parseInt(a, 10) - parseInt(b, 10)
+          // isRating: false,
+          // style: 'width: 150px'
         }
+
       ],
-      data: [
-        {
-          // name: 'Frozen Yogurt',
-          // calories: 159,
-          // fat: 6.0,
-          // carbs: 24,
-          // protein: 4.0,
-          // sodium: 87,
-          // calcium: '14%',
-          // iron: '1%',
-          // rating: 1
-        }
+      data: this.dataTracks
+      // || [
+      //   {
+      //     name: 'Frozen Yogurt',
+      //     calories: 159,
+      //     fat: 6.0,
+      //     carbs: 24,
+      //     protein: 4.0,
+      //     sodium: 87,
+      //     calcium: '14%',
+      //     iron: '1%',
+      //     rating: 1
+      //   }
 
-      ]
+      // ]
     }
   },
-  watch: {
-    filter: function (val, oldval) {
 
-      this.$store.dispatch('spotifyAuth/search',val)
-      // console.log();
+  created () {
+    EventBus.$on('search_tracks', ([payload]) => {
+       console.log(payload);
+    })
 
-    }
-  },
-  created () { }
+   }
 
 }
 </script>

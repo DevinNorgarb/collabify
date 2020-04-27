@@ -1,9 +1,9 @@
 import { axios, setAuthHeader, appModeVuex } from "boot/axios";
 
+import { initListeners } from "assets/utils/websocket/socket";
+
 import EventBus from "assets/utils/EventBus";
 var SpotifyWebApi = require("spotify-web-api-node");
-
-import { log } from "assets/utils/app-utils";
 
 export const login = async ({ commit, dispatch, getters, state }, payload) => {
   try {
@@ -13,15 +13,13 @@ export const login = async ({ commit, dispatch, getters, state }, payload) => {
       payload
     );
 
-    // if (res.data.users === 0) {
-    //   return Promise.reject("Username or Password is incorrect.");
-    // }
-
     commit(
       "commons/updateField",
       { path: "isAuth", value: true },
       { root: true }
     );
+    initListeners(payload.accessToken);
+
     commit("updateField", { path: "user", value: payload });
     commit("updateField", { path: "token", value: payload.accessToken });
     commit("updateField", {
@@ -29,10 +27,7 @@ export const login = async ({ commit, dispatch, getters, state }, payload) => {
       value: payload.refreshToken
     });
     setAuthHeader(getters["getField"]("token"));
-  } catch (e) {
-    process.env.DEV && log(e);
-    throw e;
-  }
+  } catch (e) {}
 };
 
 export const getLikedTracks = async (
@@ -69,60 +64,82 @@ export const search = async ({ commit, dispatch, getters, state }, payload) => {
 
   await spotifyApi.searchTracks(payload).then(
     function(data) {
-      console.log(data.body);
-
       var tracks = Object.assign({}, data.body.tracks);
-
-      // EventBus.$emit("search_tracks", tracks);
-
       commit("updateField", {
         path: "search_tracks",
         value: data.body.tracks
       });
-      // commit("updateField", {
-      //   path: "search_tracks",
-      //   value: data
-      // });
-      // commit("updateField", {
-      //   path: "search_tracks",
-      //   value: data
-      // });
     },
     function(err) {
-      console.log("Something went wrong!", err);
+      dispatch("getToken");
     }
   );
-
-  // Search playlists whose name or description contains 'workout'
-  spotifyApi.searchPlaylists("workout").then(
-    function(data) {
-      commit("updateField", {
-        path: "search_playlists",
-        value: data.body
-      });
-      console.log("Found playlists are", data.body);
-    },
-    function(err) {
-      console.log("Something went wrong!", err);
-    }
-  );
-
-  //   spotifyApi
-  //     .getMySavedTracks({
-  //       limit: payload.limit,
-  //       offset: payload.offset
-  //     })
-  //     .then(
-  //       function(data) {
-  //         console.log(data);
-
-  //         commit("updateField", { path: "liked_tracks", value: data });
-  //         commit("updateField", { path: "liked_tracks_limit", value: data });
-  //         commit("updateField", { path: "liked_tracks_offset", value: data });
-  //       },
-  //       function(err) {
-  //         console.log("Something went wrong!", err);
-  //       }
-  //     );
   return state;
 };
+
+export const getToken = async ({ commit, dispatch, getters, state }) => {
+  useInAppBrowser(dispatch);
+};
+
+export const playTrack = async ({ commit, dispatch, getters }) => {
+  // useInAppBrowser(dispatch);
+};
+
+function useInAppBrowser(dispatch) {
+  var authorizeURL = `http://192.168.8.105:8888/auth/spotify`;
+  var endUrl = "http://192.168.8.105:8080";
+  var browser = cordova.InAppBrowser.open(
+    authorizeURL,
+    "_blank",
+    "location=no",
+    "hidden=yes"
+  );
+  browser.hide();
+
+  browser.addEventListener("loadstop", evt => {});
+  browser.addEventListener("loaderror", evt => {
+    browser.close();
+  });
+
+  browser.addEventListener("loadstart", evt => {
+    var url_string = evt.url;
+    var url = new URL(url_string);
+    var params = parse_query_string(url.search);
+
+    if (evt.url.includes(endUrl)) {
+      browser.close();
+      var user = params;
+
+      user.name = user.displayName;
+      var rawData = JSON.parse(user._raw);
+      user.email = rawData.email;
+
+      dispatch("login", user);
+      initListeners(user.accessToken);
+
+      console.log(user);
+    }
+  });
+}
+
+function parse_query_string(query) {
+  var vars = query.split("&");
+  var query_string = {};
+  for (var i = 0; i < vars.length; i++) {
+    var pair = vars[i].split("=");
+    var key = decodeURIComponent(pair[0]);
+    var value = decodeURIComponent(pair[1]);
+    // If first entry with this name
+    if (typeof query_string[key] === "undefined") {
+      query_string[key] = decodeURIComponent(value);
+      // If second entry with this name
+    } else if (typeof query_string[key] === "string") {
+      var arr = [query_string[key], decodeURIComponent(value)];
+      query_string[key] = arr;
+      // If third or later entry with this name
+    } else {
+      query_string[key].push(decodeURIComponent(value));
+    }
+  }
+  return query_string;
+}

@@ -57,34 +57,12 @@ export default {
         val.email = rawData.email
         this.$store.dispatch('spotifyAuth/login', val)
          .then(res => {
-          console.log('res', res)
-          // this.$q.notify({
-          //   icon: 'mdi-check-circle-outline',
-          //   message: res,
-          //   timeout: 1000,
-          //   color: 'positive'
-          // })
-                    this.$router.replace('/home')
-
-          // this.$emit('register-status', true)
-          // this.$refs.reg.hide()
-        })
+          this.$router.replace('/home')
+       })
         .catch(e => {
-          console.log(e)
-          // this.$q.notify({
-          //   color: 'negative',
-          //   icon: 'mdi-alert-circle-outline',
-          //   message: e,
-          //   timeout: 1000
-          // })
         })
         .finally(_ => { this.loading = false })
-
-
-        // login
-
       }
-
     }
   },
   methods: {
@@ -97,8 +75,6 @@ export default {
       alert('Value set');
     },
     useInAppBrowser () {
-
-
       var authorizeURL = `http://192.168.8.105:8888/auth/spotify`;
       var endUrl = "http://192.168.8.105:8080";
       var browser = cordova.InAppBrowser.open(
@@ -163,7 +139,6 @@ export default {
       this.form = fields()
       this.$refs.reg.show()
       this.$nextTick(() => {
-        log('IS FORM AVAILABLE?? ', !!this.$refs.mainForm)
         this.$refs.mainForm.resetValidation()
       })
     },
@@ -173,22 +148,13 @@ export default {
         return
       }
       console.log('IP SETTINS', this.form)
-      // console.log('RESP IP SETTINS', ))
       this.$store.dispatch('commons/updateSettings', params)
       this.loading = true
       this.$store.dispatch('auth/register', this.form)
         .then(res => {
           console.log('res', res)
-          // this.$q.notify({
-          //   icon: 'mdi-check-circle-outline',
-          //   message: res,
-          //   timeout: 1000,
-          //   color: 'positive'
-          // })
-                    this.$router.replace('/home')
+          this.$router.replace('/home')
 
-          // this.$emit('register-status', true)
-          // this.$refs.reg.hide()
         })
         .catch(e => {
           console.log(e)

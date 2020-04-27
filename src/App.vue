@@ -6,6 +6,11 @@
 
 <script>
 export default {
-  name: 'App'
+  name: 'App',
+  computed: {
+    user() {
+      return this.$store.state.spotifyAuth
+    }
+  }
 }
 </script>

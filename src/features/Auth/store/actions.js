@@ -20,8 +20,13 @@ export const login = async ({ commit, dispatch, getters }, payload) => {
       { root: true }
     );
     commit("updateField", { path: "token", value: res.data.data.token });
-    setAuthHeader(getters["getField"]("token"));
+    commit("spotifyAuth/updateField", {
+      path: "expiresIn",
+      value: res.data.data.expiresIn
+    });
+    console.log(res.data.data);
 
+    setAuthHeader(getters["getField"]("token"));
   } catch (e) {
     process.env.DEV && log(e);
     throw e;

@@ -54,20 +54,29 @@ export const getLikedTracks = async (
 };
 
 export const search = async ({ commit, dispatch, getters, state }, payload) => {
-  console.log(state);
-
   var spotifyApi = new SpotifyWebApi({
     accessToken: state.user.accessToken
   });
 
   console.log(payload);
 
-  await spotifyApi.searchTracks(payload).then(
+  await spotifyApi.search(payload.term, ["track"], payload).then(
     function(data) {
       var tracks = Object.assign({}, data.body.tracks);
+      var pagination = Object.assign({}, data.body.tracks);
+      console.log(data.body);
+
       commit("updateField", {
         path: "search_tracks",
         value: data.body.tracks
+      });
+      commit("updateField", {
+        path: "search_tracks_pagination",
+        value: {
+          total: pagination.total,
+          limit: pagination.limit,
+          offset: pagination.offset
+        }
       });
     },
     function(err) {
@@ -83,8 +92,53 @@ export const getToken = async ({ commit, dispatch, getters, state }) => {
 
 export const playTrack = async ({ commit, dispatch, getters }) => {
   // useInAppBrowser(dispatch);
+
+  EventBus.$emit(`socket-update:play_track`, {
+    action: "play_track",
+    payload: {
+      data: data,
+      context: { uri: data.context, offset: data.offset }
+    }
+  });
 };
 
+/*
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+**/
 function useInAppBrowser(dispatch) {
   var authorizeURL = `http://192.168.8.105:8888/auth/spotify`;
   var endUrl = "http://192.168.8.105:8080";

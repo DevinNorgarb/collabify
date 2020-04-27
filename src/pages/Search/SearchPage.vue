@@ -22,9 +22,11 @@
           />
         </template>
       </q-input>
+        <!-- style="height: 400px" -->
       <q-table
+            style="max-height: 400px"
+
         v-if="dataTracks.length > 0"
-        style="height: 400px"
         title="Search"
         :data="dataTracks"
         :columns="columns"
@@ -34,7 +36,21 @@
         :pagination.sync="pagination"
         :rows-per-page-options="[0]"
         @request="onRequest"
+
       >
+        <!-- @virtual-scroll="onRequest" -->
+            <template v-slot:body-cell-name="props">
+        <q-td :props="props">
+          <div>
+            <p style="font-weight: bold; margin-bottom: 0px;">{{props.value}}</p>
+          </div>
+          <div class="text-sm  my-table-artists">
+            {{ props.row.artists.map(artist => {
+              return artist.name + " "
+            }).toString()  }}
+          </div>
+        </q-td>
+      </template>
         <template v-slot:body-cell-actions="props">
           <q-td :props="props">
             <q-btn
@@ -74,9 +90,7 @@ export default {
   },
   watch: {
     tracks: function (val) {
-
       var test = Object.assign({}, val)
-      console.log(test[0].name);
       this.dataTracks = []
       for (let index = 0; index < val.length; index++) {
         const element = val[index];
@@ -87,11 +101,6 @@ export default {
 
       this.$set(this.pagination, 'rowsNumber', val.total)
 
-      // this.$store.dispatch('spotifyAuth/search', {
-      //   offset: 0,
-      //   limit: this.paginationInfo.rowsPerPage,
-      //   term: val
-      // })
     },
     filter: function (val, oldval) {
 
@@ -112,6 +121,54 @@ export default {
   },
   mounted () {
     console.log(this.$store.state.spotifyAuth.user.accessToken);
+  },
+    data () {
+    return {
+      dataTracksArray: [],
+      searchDebounce: 1000,
+      dataTracks: [],
+      // pagination: { rowsPerPage: 10, page: 1 },
+
+      tableTitle: 'Search Music',
+      selectionMode: 'none',
+      loading: false,
+      filter: '',
+      // selected: [],
+      pagination: {
+        sortBy: 'desc',
+        descending: false,
+        page: 1,
+        rowsPerPage: 10,
+        rowsNumber: this.paginationInfo || 11
+      },
+      columns: [
+        {
+          name: 'name',
+          required: true,
+          label: 'Name',
+          align: 'left',
+          field: 'name',
+          // format: val => `${val}`,
+          sortable: true
+        },
+        // {
+        //   // style: 'max-width: 50px',
+        //   name: 'artist',
+        //   align: 'left',
+        //   label: 'Artists',
+        //   field: row => row.artists.map(artist => {
+        //     return artist.name + " "
+        //   }),
+        //   sortable: true,
+        //   // isRating: false,
+        //   // isRating: false,
+        // },
+        { name: 'actions', label: 'Actions', field: '', align: 'center' }
+
+      ],
+      data: this.dataTracks
+
+    }
   },
   methods: {
     onRequest (props) {
@@ -228,54 +285,7 @@ export default {
       this.pagination = evt
     }
   },
-  data () {
-    return {
 
-      dataTracksArray: [],
-      searchDebounce: 1000,
-      dataTracks: [],
-      // pagination: { rowsPerPage: 10, page: 1 },
-
-      tableTitle: 'Search Music',
-      selectionMode: 'none',
-      loading: false,
-      filter: '',
-      // selected: [],
-      pagination: {
-        sortBy: 'desc',
-        descending: false,
-        page: 1,
-        rowsPerPage: 10,
-        rowsNumber: this.paginationInfo || 11
-      },
-      columns: [
-        {
-          name: 'name',
-          required: true,
-          label: 'Name',
-          align: 'left',
-          field: 'name',
-          // format: val => `${val}`,
-          sortable: true
-        },
-        {
-          name: 'artist',
-          align: 'left',
-          label: 'Rating',
-          field: row => row.artists.map(artist => {
-            return artist.name + " "
-          }),
-          sortable: true,
-          // isRating: false,
-          // style: 'width: 150px'
-        },
-        { name: 'actions', label: 'Actions', field: '', align: 'center' }
-
-      ],
-      data: this.dataTracks
-
-    }
-  },
 
   created () {
     EventBus.$on('search_tracks', ([payload]) => {

@@ -5,11 +5,17 @@ var express = require("express"),
   SpotifyStrategy = require("../../lib/passport-spotify/index").Strategy;
 
 // var consolidate = require("consolidate");
+var cors = require("cors");
+const bodyParser = require("body-parser");
 
 var axios = require("axios");
+var SpotifyWebApi = require("spotify-web-api-node");
 
 var appKey = "4fcf1eee54994be6a3f87183e80d4943";
 var appSecret = "203f38db980246d78aee9b1eb1b16aea";
+
+var spotifyApi = new SpotifyWebApi();
+
 const querystring = require("querystring");
 
 // Passport session setup.
@@ -31,6 +37,7 @@ passport.deserializeUser(function(obj, done) {
 
 var accessToken = "";
 var refreshToken = "";
+var expiresIn = "";
 var profile = "";
 
 // Use the SpotifyStrategy within Passport.
@@ -42,7 +49,7 @@ passport.use(
     {
       clientID: appKey,
       clientSecret: appSecret,
-      callbackURL: "http://192.168.8.105:8888/callback",
+      callbackURL: "http://192.168.8.105:8888/callback"
     },
     function(accessToken, refreshToken, expires_in, profile, done) {
       // asynchronous verification, for effect...
@@ -55,10 +62,19 @@ passport.use(
 
         // console.log();
         accessToken = accessToken;
+        expires_in;
         refreshToken = refreshToken;
+        expiresIn = expires_in;
 
         profile.accessToken = accessToken;
         profile.refreshToken = refreshToken;
+        profile.expires_in = expiresIn;
+
+        spotifyApi.setAccessToken(accessToken);
+        spotifyApi.setRefreshToken(refreshToken);
+        spotifyApi.setRedirectURI("http://192.168.8.105:8888/callback");
+        spotifyApi.setClientId(appKey);
+        spotifyApi.setClientSecret(appSecret);
 
         return done(null, profile);
       });
@@ -67,6 +83,7 @@ passport.use(
 );
 
 var app = express();
+app.use(cors());
 
 // // configure Express
 // app.set("views", __dirname + "/views");
@@ -79,21 +96,13 @@ app.use(
 // persistent login sessions (recommended).
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // app.use(express.static(__dirname + "/public"));
 
 // // app.engine("html", consolidate.swig);
 
 app.get("/", function(req, res) {
-  // console.log(req, res);
-
-  const query = querystring.stringify(req.user);
-  const request = querystring.stringify(res);
-
-  // console.log("rediirecting");
-
-  // axios;
-
   return res.redirect(`http://192.168.8.105:8080/#/home?user=${req.user}`);
 
   // res.render("index.html", { user: req.user });
@@ -132,8 +141,8 @@ app.get(
       "user-read-recently-played",
       "user-top-read",
       "streaming",
-      "app-remote-control",
-    ],
+      "app-remote-control"
+    ]
     // showDialog: true,
   }),
   function(req, res) {
@@ -152,9 +161,54 @@ app.get(
   passport.authenticate("spotify", { failureRedirect: "/login" }),
   function(req, res) {
     const query = querystring.stringify(req.user);
-    const request = querystring.stringify(res);
 
     return res.redirect(`http://192.168.8.105:8080/home?user=${query}`);
+  }
+);
+
+app.get(
+  "/refresh",
+
+  function(req, res) {
+    // console.log(req.accessToken);
+    const query = querystring.stringify(req.user);
+
+    console.log(req.body);
+    console.log(req.params.refreshToken);
+    spotifyApi.setAccessToken(accessToken);
+    spotifyApi.setRefreshToken(refreshToken);
+    spotifyApi.setRedirectURI("http://192.168.8.105:8888/callback");
+    spotifyApi.setClientId(appKey);
+    spotifyApi.setClientSecret(appSecret);
+
+    // console.log(req.body);
+
+    // console.log(req);
+    // console.log(req, res, spotifyApi);
+
+    spotifyApi.refreshAccessToken().then(
+      function(data) {
+        console.log(data);
+
+        // tokenExpirationEpoch =
+        //   new Date().getTime() / 1000 + data.body['expires_in'];
+        // console.log(
+        //   'Refreshed token. It now expires in ' +
+        //     Math.floor(tokenExpirationEpoch - new Date().getTime() / 1000) +
+        //     ' seconds!'
+        // );
+      },
+      function(err) {
+        console.log("Could not refresh the token!", err.message);
+      }
+    );
+    // console.log(req.user);
+
+    // backURL = req.header("Referer") || "/";
+    // // do your thang
+    // res.redirect(backURL);
+
+    // return res.redirect(`http://192.168.8.105:8080/home?user=${query}`);
   }
 );
 

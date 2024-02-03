@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@quasar/extras": "^1.5.2",
-    "axios": "^0.19.0",
+    "axios": "^1.6.0",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "datafire": "^2.26.2",
@@ -31,17 +31,17 @@
     "vue-i18n": "^8.0.0",
     "vue-signature-pad": "1.1.14",
     "vuelidate": "0.7.4",
-    "vuex-persistedstate": "2.5.4"
+    "vuex-persistedstate": "2.7.1"
   },
   "devDependencies": {
-    "@babel/traverse": "^7.9.5",
+    "@babel/traverse": "^7.23.2",
     "@babel/types": "^7.9.5",
-    "@quasar/app": "^1.5.8",
+    "@quasar/app": "^3.3.3",
     "@vue/eslint-config-standard": "^4.0.0",
     "babel-eslint": "^8.0.1",
     "copy-webpack-plugin": "^5.0.5",
     "devtron": "^1.4.0",
-    "electron": "^7.0.0",
+    "electron": "^22.3.25",
     "electron-debug": "^3.0.0",
     "electron-devtools-installer": "^2.2.4",
     "eslint": "^5.10.0",
